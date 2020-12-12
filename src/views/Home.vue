@@ -4,67 +4,102 @@
     <section class="main-section">
       <header-item :text="'Mood Shop'" :searchicon="true" />
       <main class="container">
-        <div class="modalShow">
-          <b-modal id="modal-add" hide-footer>
-            <template #modal-title> Add Item </template>
-            <b-form class="m-3">
-              <b-row>
-                <b-col sm="3">
-                  <label for="input-name">Name :</label>
-                </b-col>
-                <b-col sm="9">
-                  <b-form-input id="input-name" v-model="form.name">
-                  </b-form-input>
-                </b-col> </b-row
-              ><br />
-              <b-row>
-                <b-col sm="3">
-                  <label class="mr-sm-4" for="input-image">Image : </label>
-                </b-col>
-                <b-col sm="9">
-                  <b-form-input id="input-image" v-model="form.image">
-                  </b-form-input>
-                </b-col> </b-row
-              ><br />
-              <b-row>
-                <b-col sm="3">
-                  <label class="mr-sm-4" for="input-price">Prices : </label>
-                </b-col>
-                <b-col sm="9">
-                  <b-form-input id="input-price" v-model="form.price">
-                  </b-form-input>
-                </b-col> </b-row
-              ><br />
-              <b-row>
-                <b-col sm="3">
-                  <label class="mr-sm-4" for="input-category">category</label>
-                </b-col>
-                <b-col sm="9">
-                  <b-form-select
-                    id="input-name"
-                    v-model="form.id_category"
-                    :options="options"
-                  >
-                  </b-form-select> </b-col></b-row
-              ><br />
-              <b-button
-                type="submit"
-                class="btn-block"
-                variant="danger"
-                @click="addData()"
-                >Print</b-button
-              >
-              <p class="text-center m-0"><b>OR</b></p>
-              <b-button
-                type="reset"
-                class="btn-block"
-                variant="info"
-                @click="resetData()"
-                >Send Email</b-button
-              >
-            </b-form>
-          </b-modal>
-        </div>
+        <b-modal id="modal-add" hide-footer>
+          <template #modal-title> Add Item </template>
+          <b-form class="m-3">
+            <b-row>
+              <b-col sm="3">
+                <label for="input-name">Name :</label>
+              </b-col>
+              <b-col sm="9">
+                <b-form-input id="input-name" v-model="form.name">
+                </b-form-input>
+              </b-col> </b-row
+            ><br />
+            <b-row>
+              <b-col sm="3">
+                <label class="mr-sm-4" for="input-image">Image : </label>
+              </b-col>
+              <b-col sm="9">
+                <b-form-input id="input-image" v-model="form.image">
+                </b-form-input>
+              </b-col> </b-row
+            ><br />
+            <b-row>
+              <b-col sm="3">
+                <label class="mr-sm-4" for="input-price">Prices : </label>
+              </b-col>
+              <b-col sm="9">
+                <b-form-input id="input-price" v-model="form.price">
+                </b-form-input>
+              </b-col> </b-row
+            ><br />
+            <b-row>
+              <b-col sm="3">
+                <label class="mr-sm-4" for="input-category">category</label>
+              </b-col>
+              <b-col sm="9">
+                <b-form-select
+                  id="input-name"
+                  v-model="form.id_category"
+                  :options="options"
+                >
+                </b-form-select> </b-col></b-row
+            ><br />
+            <b-button
+              type="submit"
+              class="btn-block"
+              variant="danger"
+              @click="addData()"
+              >Print</b-button
+            >
+            <p class="text-center m-0"><b>OR</b></p>
+            <b-button
+              type="reset"
+              class="btn-block"
+              variant="info"
+              @click="resetData()"
+              >Send Email</b-button
+            >
+          </b-form>
+        </b-modal>
+        <b-modal id="modal-add-cart" class="modal-body" hide-footer>
+          <template #modal-title> Checkout </template>
+          <div class="modal-cart-align m-3">
+            <p>Cashier : Zaki Ganteng</p>
+            <h4 class="mr-4">#{{ randomReceipt }}</h4>
+          </div>
+          <b-form class="m-3">
+            <div
+              class="modal-cart-align"
+              v-for="item in dataCart"
+              :key="item.id"
+            >
+              <p>{{ item.name }} {{ item.count }}</p>
+              <p>Rp. {{ item.price }}</p>
+            </div>
+            <div class="modal-cart-align">
+              <p>Ppn 10%</p>
+              <p>Rp. {{ ppn }}</p>
+            </div>
+            <br />
+            <b-button
+              type="submit"
+              class="btn-block"
+              variant="danger"
+              @click="addData()"
+              >Print</b-button
+            >
+            <p class="text-center m-0"><b>OR</b></p>
+            <b-button
+              type="reset"
+              class="btn-block"
+              variant="info"
+              @click="resetData()"
+              >Send Email</b-button
+            >
+          </b-form>
+        </b-modal>
 
         <div
           class="button-item"
@@ -94,11 +129,19 @@
         <article class="cart-order">
           <div class="order-total">
             <h4>Total</h4>
-            <h4>Rp. 150.000</h4>
+            <h4>{{ countCart }}</h4>
           </div>
           <p class="text-left">*Belum termasuk ppn</p>
-          <b-button class="mt-3" variant="info" block>Checkout</b-button>
-          <b-button class="mt-2" variant="danger" block> Cancel </b-button
+          <b-button
+            class="mt-3"
+            variant="info"
+            v-b-modal="'modal-add-cart'"
+            block
+            @click="randomNumber()"
+            >Checkout</b-button
+          >
+          <b-button class="mt-2" variant="danger" @click="cancelCart()" block>
+            Cancel </b-button
           ><br /><br />
         </article>
       </article>
@@ -142,12 +185,9 @@ export default {
         price: null,
         id_category: "",
       },
-      // options: [
-      //   { value: null, text: "Please Select Category" },
-      //   { value: "2", text: "Food" },
-      //   { value: "3", text: "Drink" },
-      // ],
       options: [],
+      randomReceipt: 0,
+      ppn: 0,
     };
   },
   methods: {
@@ -168,6 +208,13 @@ export default {
         this.dataCart.push(data);
       }
       this.makeToast(data.name);
+    },
+    cancelCart() {
+      this.dataCart = [];
+    },
+    randomNumber() {
+      this.randomReceipt = Math.round(Math.random() * 100000000 + 1);
+      this.ppn = (this.countCart * 10) / 100;
     },
     makeToast(name) {
       this.$bvToast.toast(`product name : ${name}`, {
@@ -210,6 +257,15 @@ export default {
     },
     resetData() {
       console.log("masuk 2");
+    },
+  },
+  computed: {
+    countCart() {
+      let total = 0;
+      for (const res of this.dataCart) {
+        total += Number(res.price) * Number(res.count);
+      }
+      return total;
     },
   },
   mounted() {
@@ -313,5 +369,10 @@ p {
   height: 65vh;
   overflow: auto;
   /* overflow: scroll; */
+}
+.modal-cart-align{
+   width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
