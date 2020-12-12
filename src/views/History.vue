@@ -1,10 +1,10 @@
 <template>
   <div class="history">
-    <side-nav />
+    <side-nav :modalAdd="false"/>
+
     <section class="main-section">
       <header-item :text="'History'" :searchicon="false" />
       <main class="container">
-        <card-product />
       </main>
     </section>
   </div>
