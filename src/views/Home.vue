@@ -80,24 +80,57 @@
         </div>
       </main>
     </section>
-    <cart-aside :data="dataCart" />
+    <!-- <cart-aside :data="dataCart" /> -->
+    <aside class="shadow-sm">
+      <div class="shadow-sm header-cart">
+        <h2>
+          Cart <span class="span-cart">{{ dataCart.length }}</span>
+        </h2>
+      </div>
+      <article v-if="dataCart && dataCart.length > 0">
+        <div class="cart-wrap">
+          <cart-item v-for="item in dataCart" :key="item.id" :data="item" />
+        </div>
+        <article class="cart-order">
+          <div class="order-total">
+            <h4>Total</h4>
+            <h4>Rp. 150.000</h4>
+          </div>
+          <p class="text-left">*Belum termasuk ppn</p>
+          <b-button class="mt-3" variant="info" block>Checkout</b-button>
+          <b-button class="mt-2" variant="danger" block> Cancel </b-button
+          ><br /><br />
+        </article>
+      </article>
+      <article v-else class="cart-empty">
+        <img
+          src="../assets/icon/food-and-restaurant.png"
+          class="icon-cartempty"
+          alt=""
+        />
+        <h4>Your cart is empty</h4>
+        <p class="empty-desc">Please add some items from the menu</p>
+      </article>
+    </aside>
   </div>
 </template>
 
 <script>
 import CardProduct from "../components/CardProduct.vue";
-import CartAside from "../components/CartAside.vue";
+// import CartAside from "../components/CartAside.vue";
 import HeaderItem from "../components/HeaderItem.vue";
 import SideNav from "../components/SideNav.vue";
 import axios from "axios";
+import CartItem from "../components/CartItem.vue";
 
 export default {
   name: "Home",
   components: {
     HeaderItem,
     SideNav,
-    CartAside,
+    // CartAside,
     CardProduct,
+    CartItem,
   },
   data() {
     return {
@@ -123,7 +156,7 @@ export default {
         if (res.name == data.name) {
           return res.name;
         }
-      }); 
+      });
       if (hasil) {
         for (let i = 0; i < this.dataCart.length; i++) {
           if (this.dataCart[i].name == data.name) {
@@ -141,7 +174,7 @@ export default {
         title: "Item Added !!",
         variant: "success",
         solid: true,
-        toaster: "b-toaster-bottom-right",
+        toaster: "b-toaster-bottom-left",
       });
     },
     addData() {
@@ -215,6 +248,8 @@ export default {
 .main-section {
   background: rgba(190, 195, 202, 0.3);
   box-sizing: border-box;
+  height: 100vh;
+  overflow: auto;
 }
 .home {
   margin: 0;
@@ -224,11 +259,59 @@ export default {
   grid-template-columns: 80px auto 400px;
 }
 .container {
-  /* overflow: hidden; */
   display: flex;
   flex-wrap: wrap;
 }
 .button-item {
   cursor: pointer;
+}
+aside {
+  position: relative;
+}
+article {
+  padding: 10px;
+}
+.header-cart {
+  display: flex;
+  position: sticky;
+  top: 0;
+  padding: 7px;
+  background: white;
+}
+.cart-empty {
+  position: sticky;
+  top: 60px;
+}
+h2 {
+  margin: auto;
+}
+
+.cart-order {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.order-total {
+  display: flex;
+  justify-content: space-between;
+}
+h4 {
+  font-size: 1.3rem;
+}
+p {
+  font-size: 1rem;
+}
+.span-cart {
+  background-color: cyan;
+  border-radius: 50%;
+  padding: 1px 8px;
+  color: white;
+  font-size: 1.5rem;
+}
+.cart-wrap {
+  height: 65vh;
+  overflow: auto;
+  /* overflow: scroll; */
 }
 </style>
