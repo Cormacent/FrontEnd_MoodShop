@@ -32,7 +32,6 @@ export default {
     },
     category: {
       type: String,
-      required: true,
     },
   },
 };

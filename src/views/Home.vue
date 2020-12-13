@@ -2,7 +2,12 @@
   <div class="home">
     <side-nav :modalAdd="true" />
     <section class="main-section">
-      <header-item :text="'Mood Shop'" :searchicon="true" />
+      <header-item
+        :text="'Mood Shop'"
+        :searchicon="true"
+        v-on:searchToHome="onSearch"
+        v-on:sortToHome="onSort"
+      />
       <main class="container">
         <b-modal id="modal-add" hide-footer>
           <template #modal-title> Add Item </template>
@@ -46,10 +51,7 @@
                 >
                 </b-form-select> </b-col></b-row
             ><br />
-            <b-button
-              class="btn-block"
-              variant="danger"
-              @click="addData()"
+            <b-button class="btn-block" variant="danger" @click="addData()"
               >Print</b-button
             >
             <p class="text-center m-0"><b>OR</b></p>
@@ -85,10 +87,7 @@
               <p>Total Rp. {{ countModal }}</p>
             </div>
             <br />
-            <b-button
-              class="btn-block"
-              variant="danger"
-              @click="modalOrder()"
+            <b-button class="btn-block" variant="danger" @click="modalOrder()"
               >Print</b-button
             >
             <p class="text-center m-0"><b>OR</b></p>
@@ -200,6 +199,56 @@ export default {
     };
   },
   methods: {
+    onSort(value) {
+      let order = "";
+      let sort = "";
+      if (value == 1) {
+        order = "name";
+        sort = "asc";
+      }
+      if (value == 2) {
+        order = "category";
+        sort = "asc";
+      }
+      if (value == 3) {
+        order = "price";
+        sort = "asc";
+      }
+      if (value == 4) {
+        order = "name";
+        sort = "desc";
+      }
+      if (value == 5) {
+        order = "category";
+        sort = "desc";
+      }
+      if (value == 6) {
+        order = "price";
+        sort = "desc";
+      }
+      axios
+        .get(`${process.env.VUE_APP_URL}product?orderBy=${order}&sort=${sort}`)
+        .then((res) => {
+            this.dataproduct = res.data.result;
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+    },
+    onSearch(value) {
+      axios
+        .get(process.env.VUE_APP_URL + "product?search=" + value)
+        .then((res) => {
+          if (res.data.result == "tidak ada data di table product") {
+            this.dataproduct = [];
+          } else {
+            this.dataproduct = res.data.result;
+          }
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+    },
     deleteThisRow(index) {
       this.dataCart.splice(index, 1);
     },
@@ -244,7 +293,6 @@ export default {
         arrayValue.push(value.name);
       });
       this.formOrder.name_product = arrayValue.join(", ").toString();
-      console.log(this.formOrder);
       axios({
         method: "post",
         url: process.env.VUE_APP_URL + "history",

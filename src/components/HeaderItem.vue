@@ -2,11 +2,34 @@
   <header class="shadow-sm">
     <div class="title">
       <h2>{{ text }}</h2>
-      <fa-icon
-        :class="searchicon ? 'icon' : 'hide'"
-        :icon="['fas', 'search']"
-        size="2x"
-      />
+      <div :class="searchicon ? 'search-bar' : 'hide'">
+        <b-form-input
+          id="searchInput"
+          type="search"
+          v-model="inputValue"
+          v-on:keyup="emitToParent"
+          class="mr-3"
+        >
+        </b-form-input>
+        <b-dropdown
+          variant="dark"
+          right
+          v-model="dropdownValue.dropdownSelected"
+          text="Right Align"
+        >
+          <template #button-content>
+            <b-icon icon="filter-right" aria-hidden="true"></b-icon>
+          </template>
+          <b-dropdown-item
+            v-for="option in dropdownValue.options"
+            :key="option.value"
+            :value="option.value"
+            @click="dropDownSort(option.value)"
+          >
+            {{ option.text }}
+          </b-dropdown-item>
+        </b-dropdown>
+      </div>
     </div>
     <div class="cart-mobile">
       <div :class="'{{ searchicon }}' ? 'vl' : 'hide'"></div>
@@ -27,10 +50,57 @@ export default {
       type: Boolean,
       required: true,
     },
-    text:{
+    text: {
       type: String,
       required: true,
-    }
+    },
+  },
+  data() {
+    return {
+      inputValue: "",
+      dropdownValue: {
+        dropdownSelected: "1",
+        options: [
+          {
+            value: "1",
+            text: "asc - name",
+          },
+          {
+            value: "2",
+            text: "asc - category",
+          },
+          {
+            value: "3",
+            text: "asc - price",
+          },
+          {
+            value: "4",
+            text: "desc - price",
+          },
+          {
+            value: "5",
+            text: "desc - price",
+          },
+          {
+            value: "6",
+            text: "desc - price",
+          },
+        ],
+      },
+    };
+  },
+  methods: {
+    emitToParent() {
+      this.$emit("searchToHome", this.inputValue);
+    },
+    changeItem() {
+      console.log("masuk");
+    },
+    dropDownSort(data) {
+      if (data != null) {
+        this.$emit("sortToHome", data);
+      }
+    },
   },
 };
 </script>
@@ -67,5 +137,9 @@ h2 {
   flex-direction: row;
   width: 100%;
   font-size: 1rem;
+}
+.search-bar {
+  margin: 10px 20px;
+  display: flex;
 }
 </style>

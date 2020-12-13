@@ -14,9 +14,9 @@
             sub-title-text-variant="white"
             class="card-style text-left"
           >
-            <b-card-text> 
-             <h3>Rp. 1.000.000</h3>
-             <p>+2% Yesterday</p>
+            <b-card-text>
+              <h3>Rp. 1.000.000</h3>
+              <p>+2% Yesterday</p>
             </b-card-text>
           </b-card>
           <b-card
@@ -28,8 +28,8 @@
             class="card-style text-left"
           >
             <b-card-text>
-             <h3>3.270</h3>
-             <p>+5% Last Week</p>
+              <h3>3.270</h3>
+              <p>+5% Last Week</p>
             </b-card-text>
           </b-card>
           <b-card
@@ -41,11 +41,21 @@
             class="card-style text-left"
           >
             <b-card-text>
-             <h3>Rp. 100.000.000.000</h3>
-             <p>+10% Last Year</p>
+              <h3>Rp. 100.000.000.000</h3>
+              <p>+10% Last Year</p>
             </b-card-text>
           </b-card>
         </section>
+        <b-card
+          overlay
+          bg-variant="info"
+          text-variant="white"
+          sub-title="Today's Income"
+          sub-title-text-variant="white"
+          class="static-cart text-left w-100"
+        >
+        </b-card>
+
         <b-table striped hover :items="items" :fields="fields"></b-table>
       </main>
     </section>
