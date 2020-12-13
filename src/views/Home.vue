@@ -47,7 +47,6 @@
                 </b-form-select> </b-col></b-row
             ><br />
             <b-button
-              type="submit"
               class="btn-block"
               variant="danger"
               @click="addData()"
@@ -67,7 +66,7 @@
           <template #modal-title> Checkout </template>
           <div class="modal-cart-align m-3">
             <p>Cashier : Zaki Ganteng</p>
-            <h4 class="mr-4">#{{ randomReceipt }}</h4>
+            <h4 class="mr-4">{{ randomInvoice }}</h4>
           </div>
           <b-form class="m-3">
             <div
@@ -82,20 +81,18 @@
               <p>Ppn 10%</p>
               <p>Rp. {{ ppn }}</p>
             </div>
+            <div class="text-right">
+              <p>Total Rp. {{ countModal }}</p>
+            </div>
             <br />
             <b-button
-              type="submit"
               class="btn-block"
               variant="danger"
-              @click="addData()"
+              @click="modalOrder()"
               >Print</b-button
             >
             <p class="text-center m-0"><b>OR</b></p>
-            <b-button
-              type="reset"
-              class="btn-block"
-              variant="info"
-              @click="resetData()"
+            <b-button type="reset" class="btn-block" variant="info"
               >Send Email</b-button
             >
           </b-form>
@@ -111,6 +108,7 @@
             :name="item.name"
             :price="Number(item.price)"
             :image="item.image"
+            :category="item.category"
           />
         </div>
       </main>
@@ -124,7 +122,12 @@
       </div>
       <article v-if="dataCart && dataCart.length > 0">
         <div class="cart-wrap">
-          <cart-item v-for="item in dataCart" :key="item.id" :data="item" />
+          <cart-item
+            v-for="(item, index) in dataCart"
+            :key="item.id"
+            :data="item"
+            v-on:delete-row="deleteThisRow(index)"
+          />
         </div>
         <article class="cart-order">
           <div class="order-total">
@@ -185,12 +188,21 @@ export default {
         price: null,
         id_category: "",
       },
+      formOrder: {
+        amount: 0,
+        invoice: "",
+        cashier: "Zaki Ganteng",
+        name_product: "",
+      },
       options: [],
-      randomReceipt: 0,
+      randomInvoice: "",
       ppn: 0,
     };
   },
   methods: {
+    deleteThisRow(index) {
+      this.dataCart.splice(index, 1);
+    },
     addCart(data) {
       let hasil = this.dataCart.find((res) => {
         if (res.name == data.name) {
@@ -213,7 +225,7 @@ export default {
       this.dataCart = [];
     },
     randomNumber() {
-      this.randomReceipt = Math.round(Math.random() * 100000000 + 1);
+      this.randomInvoice = "#" + Math.round(Math.random() * 100000000 + 1);
       this.ppn = (this.countCart * 10) / 100;
     },
     makeToast(name) {
@@ -223,6 +235,36 @@ export default {
         solid: true,
         toaster: "b-toaster-bottom-left",
       });
+    },
+    modalOrder() {
+      this.formOrder.amount = this.countModal;
+      this.formOrder.invoice = this.randomInvoice;
+      let arrayValue = [];
+      this.dataCart.forEach((value) => {
+        arrayValue.push(value.name);
+      });
+      this.formOrder.name_product = arrayValue.join(", ").toString();
+      console.log(this.formOrder);
+      axios({
+        method: "post",
+        url: process.env.VUE_APP_URL + "history",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: JSON.parse(JSON.stringify(this.formOrder)),
+      })
+        .then((res) => {
+          alert(res.data.description);
+          this.hideModal("modal-add-cart");
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+    },
+    hideModal(data) {
+      if (data == "modal-add-cart") {
+        this.$bvModal.hide(data);
+      }
     },
     addData() {
       if (
@@ -255,9 +297,6 @@ export default {
         alert("Please fill out the entire form, and fill it out correctly");
       }
     },
-    resetData() {
-      console.log("masuk 2");
-    },
   },
   computed: {
     countCart() {
@@ -266,6 +305,10 @@ export default {
         total += Number(res.price) * Number(res.count);
       }
       return total;
+    },
+    countModal() {
+      let hasil = this.countCart + this.ppn;
+      return hasil;
     },
   },
   mounted() {
@@ -304,8 +347,6 @@ export default {
 .main-section {
   background: rgba(190, 195, 202, 0.3);
   box-sizing: border-box;
-  height: 100vh;
-  overflow: auto;
 }
 .home {
   margin: 0;
@@ -368,11 +409,14 @@ p {
 .cart-wrap {
   height: 65vh;
   overflow: auto;
-  /* overflow: scroll; */
 }
-.modal-cart-align{
-   width: 100%;
+.modal-cart-align {
+  width: 100%;
   display: flex;
   justify-content: space-between;
+}
+.container {
+  height: 92vh;
+  overflow: auto;
 }
 </style>

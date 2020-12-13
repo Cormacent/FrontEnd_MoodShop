@@ -3,8 +3,17 @@
     <div class="image">
       <img :src="data.image" :alt="data.name" />
     </div>
-    <div class="content text-left">
-      <h5>{{ data.name }}</h5>
+    <div class="content">
+      <div class="prices">
+        <h5>{{ data.name }}</h5>
+        <fa-icon
+          :icon="['fas', 'trash']"
+          size="lg"
+          @click="$emit('delete-row')"
+          class="text-danger"
+          style="cursor: pointer"
+        />
+      </div>
       <div class="prices">
         <div class="plusminus form-group row">
           <button class="btn btn-danger btn-sm mr-1" @click="minus()">-</button>
@@ -65,13 +74,10 @@ img {
 }
 
 .plusminus {
-  /* display: inline-block; */
   margin-right: 20px;
   width: 100px;
 }
 .input-pm {
   width: 40px;
-  /* border-color: greenyellow; */
 }
-
 </style>

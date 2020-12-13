@@ -4,6 +4,7 @@
       <img :src="image" :alt="name" />
     </div>
     <p class="title">{{ name }}</p>
+    <p class="title text-info">{{ category }}</p>
     <p class="value">{{ price }} K</p>
   </div>
 </template>
@@ -27,6 +28,10 @@ export default {
     },
     price: {
       type: Number,
+      required: true,
+    },
+    category: {
+      type: String,
       required: true,
     },
   },

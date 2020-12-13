@@ -12,10 +12,10 @@ import {
   faUtensils,
   faHistory,
   faPlusCircle,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import VModal from 'vue-js-modal'
-
+import VModal from "vue-js-modal";
 
 library.add(
   faBars,
@@ -23,10 +23,11 @@ library.add(
   faShoppingCart,
   faUtensils,
   faHistory,
-  faPlusCircle
+  faPlusCircle,
+  faTrash
 );
 Vue.component("fa-icon", FontAwesomeIcon);
-Vue.use(VModal)
+Vue.use(VModal);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.config.productionTip = false;
