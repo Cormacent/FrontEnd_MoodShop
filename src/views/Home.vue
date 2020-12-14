@@ -3,6 +3,7 @@
     <side-nav :modalAdd="true" />
     <section class="main-section">
       <header-item
+        class="header"
         :text="'Mood Shop'"
         :searchicon="true"
         v-on:searchToHome="onSearch"
@@ -462,5 +463,8 @@ p {
 .container {
   height: 92vh;
   overflow: auto;
+}
+.header{
+  z-index: 1;
 }
 </style>
