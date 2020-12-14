@@ -9,6 +9,7 @@
           v-model="inputValue"
           v-on:keyup="emitToParent"
           class="mr-3"
+          placeholder="Search product here.."
         >
         </b-form-input>
         <b-dropdown
