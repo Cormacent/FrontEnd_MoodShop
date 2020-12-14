@@ -8,7 +8,7 @@
         v-on:searchToHome="onSearch"
         v-on:sortToHome="onSort"
       />
-      <main class="container">
+      <main class="container col">
         <b-modal id="modal-add" hide-footer>
           <template #modal-title> Add Item </template>
           <b-form class="m-3">
@@ -229,7 +229,7 @@ export default {
       axios
         .get(`${process.env.VUE_APP_URL}product?orderBy=${order}&sort=${sort}`)
         .then((res) => {
-            this.dataproduct = res.data.result;
+          this.dataproduct = res.data.result;
         })
         .catch((err) => {
           alert(err.message);
@@ -302,6 +302,7 @@ export default {
         data: JSON.parse(JSON.stringify(this.formOrder)),
       })
         .then((res) => {
+          this.dataCart = [];
           alert(res.data.description);
           this.hideModal("modal-add-cart");
         })
@@ -331,11 +332,6 @@ export default {
         })
           .then((res) => {
             alert(res.data.description);
-            // this.form.image = "";
-            // this.form.name = "";
-            // this.form.price = null;
-            // this.form.id_category = "";
-            // this.$refs["modal-add"].hide();
             location.reload();
           })
           .catch((err) => {

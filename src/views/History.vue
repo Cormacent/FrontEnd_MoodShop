@@ -46,16 +46,6 @@
             </b-card-text>
           </b-card>
         </section>
-        <b-card
-          overlay
-          bg-variant="info"
-          text-variant="white"
-          sub-title="Today's Income"
-          sub-title-text-variant="white"
-          class="static-cart text-left w-100"
-        >
-        </b-card>
-
         <b-table striped hover :items="items" :fields="fields"></b-table>
       </main>
     </section>
