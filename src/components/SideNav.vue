@@ -1,21 +1,20 @@
 <template>
-  <aside class="shadow-sm">
-    <div class="header-nav">
-      <fa-icon class="icon" :icon="['fas', 'bars']" size="2x" />
-    </div>
-    <nav>
-      <router-link to="/" class="router button">
-        <fa-icon class="icon" :icon="['fas', 'utensils']" size="2x" />
-      </router-link>
+  <b-collapse id="navbar-collapse" class="shadow-sm collapse">
+    <router-link to="/" class="router button">
+      <fa-icon class="icon" :icon="['fas', 'utensils']" size="2x" />
+    </router-link>
 
-      <router-link to="/history" class="router button">
-        <fa-icon class="icon" :icon="['fas', 'history']" size="2x" />
-      </router-link>
-      <div v-b-modal="'modal-add'" class="button text-success" v-if="modalAdd == true">
-        <fa-icon class="icon" :icon="['fas', 'plus-circle']" size="2x" />
-      </div>
-    </nav>
-  </aside>
+    <router-link to="/history" class="router button">
+      <fa-icon class="icon" :icon="['fas', 'history']" size="2x" />
+    </router-link>
+    <router-link to="/edit" class="router button">
+      <fa-icon
+        class="icon text-success"
+        :icon="['fas', 'plus-circle']"
+        size="2x"
+      />
+    </router-link>
+  </b-collapse>
 </template>
 
 <script>
@@ -31,14 +30,6 @@ export default {
 </script>
 
 <style scoped>
-nav {
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  background: white;
-  position: sticky;
-  top: 60px;
-}
 .button,
 :focus {
   margin: 15px;
@@ -52,5 +43,16 @@ nav {
 }
 .router {
   color: black;
+}
+.collapse {
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  background: white;
+  position: sticky;
+  top: 60px;
+  margin: 0;
+  z-index: 1;
 }
 </style>

@@ -13,6 +13,7 @@ import {
   faHistory,
   faPlusCircle,
   faTrash,
+  faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VModal from "vue-js-modal";
@@ -24,7 +25,8 @@ library.add(
   faUtensils,
   faHistory,
   faPlusCircle,
-  faTrash
+  faTrash,
+  faEdit
 );
 Vue.component("fa-icon", FontAwesomeIcon);
 Vue.use(VModal);

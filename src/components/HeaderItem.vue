@@ -1,8 +1,15 @@
 <template>
   <header class="shadow-sm">
     <div class="title">
+      <b-button v-b-toggle:navbar-collapse variant="white" class="ml-1">
+        <fa-icon :icon="['fas', 'bars']" size="2x" />
+      </b-button>
       <h2>{{ text }}</h2>
-      <div :class="searchicon ? 'search-bar' : 'hide'">
+
+      <b-collapse
+        id="search-collapse"
+        :class="searchicon ? 'search-bar' : 'hide'"
+      >
         <b-form-input
           id="searchInput"
           type="search"
@@ -13,6 +20,7 @@
         >
         </b-form-input>
         <b-dropdown
+          class="dropDownSort"
           variant="dark"
           right
           v-model="dropdownValue.dropdownSelected"
@@ -30,15 +38,39 @@
             {{ option.text }}
           </b-dropdown-item>
         </b-dropdown>
-      </div>
+      </b-collapse>
+      <b-button
+        v-b-toggle:search-collapse
+        variant="white"
+        :class="searchicon ? 'search-icon' : 'hide'"
+      >
+        <fa-icon :icon="['fas', 'search']" size="2x" />
+      </b-button>
+      <b-dropdown
+        :class="filterEdit ? 'search-bar' : 'hide'"
+        variant="dark"
+        right
+        v-model="dropdownValue.dropdownSelected"
+        text="Right Align"
+      >
+        <template #button-content>
+          <b-icon icon="filter-right" aria-hidden="true"></b-icon>
+        </template>
+        <b-dropdown-item
+          v-for="option in ddChangeValue.options"
+          :key="option.value"
+          :value="option.value"
+          @click="dropdownChange(option.value)"
+        >
+          {{ option.text }}
+        </b-dropdown-item>
+      </b-dropdown>
     </div>
     <div class="cart-mobile">
-      <div :class="'{{ searchicon }}' ? 'vl' : 'hide'"></div>
-      <fa-icon
-        :class="'{{ searchicon }}' ? 'icon' : 'hide'"
-        :icon="['fas', 'shopping-cart']"
-        size="2x"
-      />
+      <div class="vl"></div>
+      <b-button v-b-toggle:cart-collapse variant="white">
+        <fa-icon :icon="['fas', 'shopping-cart']" size="2x" />
+      </b-button>
     </div>
   </header>
 </template>
@@ -51,6 +83,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    filterEdit: {
+      type: Boolean,
+      required: true,
+    },
     text: {
       type: String,
       required: true,
@@ -59,6 +95,18 @@ export default {
   data() {
     return {
       inputValue: "",
+      ddChangeValue: {
+        options: [
+          {
+            value: true,
+            text: "Product",
+          },
+          {
+            value: false,
+            text: "Category",
+          },
+        ],
+      },
       dropdownValue: {
         dropdownSelected: "1",
         options: [
@@ -76,11 +124,11 @@ export default {
           },
           {
             value: "4",
-            text: "desc - price",
+            text: "desc - name",
           },
           {
             value: "5",
-            text: "desc - price",
+            text: "desc - category",
           },
           {
             value: "6",
@@ -100,6 +148,11 @@ export default {
     dropDownSort(data) {
       if (data != null) {
         this.$emit("sortToHome", data);
+      }
+    },
+    dropdownChange(data) {
+      if (data != null) {
+        this.$emit("changeShow", data);
       }
     },
   },
@@ -127,11 +180,13 @@ h2 {
 .cart-mobile {
   display: none;
 }
+
 .vl {
   border-left: 2px solid black;
   height: auto;
-  margin: 5px 20px;
+  margin: 10px 5px;
 }
+
 .title {
   display: flex;
   justify-content: space-between;
@@ -142,5 +197,44 @@ h2 {
 .search-bar {
   margin: 10px 20px;
   display: flex;
+}
+.search-icon{
+  display: block;
+}
+@media screen and (max-width: 360px) {
+  .cart-mobile {
+    display: flex;
+  }
+  h2 {
+    font-size: 1em;
+    display: none;
+  }
+  .dropDownSort {
+    display: none;
+  }
+}
+@media screen and (min-width: 361px) {
+  .cart-mobile {
+    display: flex;
+  }
+  h2 {
+    font-size: 1em;
+    display: none;
+  }
+  .dropDownSort {
+    display: none;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .cart-mobile {
+    display: none;
+  }
+  h2 {
+    font-size: 2em;
+    display: block;
+  }
+  .dropDownSort {
+    display: block;
+  }
 }
 </style>

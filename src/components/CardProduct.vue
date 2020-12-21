@@ -1,11 +1,14 @@
 <template>
   <div class="item text-left">
-    <div class="image shadow-sm">
+    <div class="image text-center">
       <img :src="image" :alt="name" />
     </div>
-    <p class="title">{{ name }}</p>
-    <p class="title text-info">{{ category }}</p>
-    <p class="value">{{ price }} K</p>
+    <hr class="divider" />
+    <div class="content">
+      <p class="title">{{ name }}</p>
+      <p class="value">{{ price }} K</p>
+      <p class="title text-info">{{ category }}</p>
+    </div>
   </div>
 </template>
 
@@ -38,9 +41,38 @@ export default {
 </script>
 
 <style scoped>
-.item img {
+.item {
+  margin: 10px;
+  transition: 0.5s;
+  background-color: white;
+}
+.item:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+  border-radius: 10px;
+}
+.content {
+  padding: 0 10px 10px 10px;
+}
+.divider{
+  margin: 0px;
+}
+img {
+  width: 250px;
   max-width: 100%;
   max-height: 100%;
+}
+img:hover {
+  transition: 0.5s;
+  border-radius: 10px 10px 0px 0px;
+}
+.image {
+  width: 250px;
+  height: 200px;
+}
+.image:hover {
+  transition: 0.5s;
+  border-radius: 10px 10px 0px 0px;
 }
 .item .title {
   font-size: 1rem;
@@ -51,17 +83,5 @@ export default {
   font-size: 1rem;
   font-weight: bold;
   margin: 0;
-}
-.image {
-  width: 200px;
-}
-img {
-  border-radius: 10px 10px 0px 0px;
-  -moz-border-radius: 10px 10px 0px 0px;
-  -webkit-border-radius: 10px 10px 0px 0px;
-  border: 0px solid #000000;
-}
-.item {
-  margin: 10px;
 }
 </style>
