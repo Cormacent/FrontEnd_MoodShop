@@ -105,15 +105,40 @@ export default {
       items: [],
     };
   },
-  mounted() {
-    axios
-      .get(process.env.VUE_APP_URL + "history")
-      .then((res) => {
-        this.items = res.data.result;
+  methods: {
+    getAllData() {
+      axios({
+        method: "GET",
+        url: process.env.VUE_APP_URL + "history",
+        headers: {
+          authtoken: this.dataToken,
+        },
       })
-      .catch((err) => {
-        alert(err.message);
-      });
+        .then((res) => {
+          this.items = res.data.result;
+        })
+        .catch((err) => {
+          alert(err.message);
+          this.logout();
+        });
+    },
+    logout() {
+      const check = this.$store.dispatch("delToken");
+      if (check) {
+        this.$router.push({ name: "Login" });
+      }
+    },
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.getters.loggedIn;
+    },
+    dataToken() {
+      return this.$store.getters.dataToken;
+    },
+  },
+  mounted() {
+    this.getAllData();
   },
 };
 </script>

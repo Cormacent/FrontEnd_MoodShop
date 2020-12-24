@@ -229,6 +229,7 @@ export default {
         })
         .catch((err) => {
           alert(err.message);
+          this.logout();
         });
       // .get(`${process.env.VUE_APP_URL}product?orderBy=${order}&sort=${sort}`)
       // .then((res) => {
@@ -255,6 +256,7 @@ export default {
         })
         .catch((err) => {
           alert(err.message);
+          this.logout();
         });
 
       // axios
@@ -324,19 +326,21 @@ export default {
         data: JSON.parse(JSON.stringify(this.formOrder)),
       })
         .then((res) => {
-          console.log("bukan");
-          console.log(res);
-          // if (condition) {
-            
-          // }
+          if (
+            res.data.result[0].message ==
+            "please fill in all the data provided completely"
+          ) {
+            alert(res.data.result[0].message);
+            this.dataCart = [];
+            this.hideModal("modal-add-cart");
+          }
           this.dataCart = [];
           alert(res.data.description);
           this.hideModal("modal-add-cart");
         })
         .catch((err) => {
-          console.log("sini");
-          console.log(err);
           alert(err.message);
+          this.logout();
         });
     },
     hideModal(data) {
@@ -356,8 +360,15 @@ export default {
           this.dataproduct = res.data.result;
         })
         .catch((err) => {
-          alert(err.message);
+          alert(`Your token has expired say : ${err.message}`);
+          this.logout();
         });
+    },
+    logout() {
+      const check = this.$store.dispatch("delToken");
+      if (check) {
+        this.$router.push({ name: "Login" });
+      }
     },
   },
   computed: {
