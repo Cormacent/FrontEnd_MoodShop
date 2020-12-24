@@ -21,13 +21,19 @@
         </b-form-input>
         <b-dropdown
           class="dropDownSort"
-          variant="dark"
+          variant="link"
           right
           v-model="dropdownValue.dropdownSelected"
           text="Right Align"
+          no-caret
+          text-decoration-none
         >
           <template #button-content>
-            <b-icon icon="filter-right" aria-hidden="true"></b-icon>
+            <b-icon
+              variant="dark"
+              icon="filter-right"
+              aria-hidden="true"
+            ></b-icon>
           </template>
           <b-dropdown-item
             v-for="option in dropdownValue.options"
@@ -64,6 +70,23 @@
         >
           {{ option.text }}
         </b-dropdown-item>
+      </b-dropdown>
+      <b-dropdown
+        class="drop-down-logout"
+        variant="link"
+        right
+        text="Right Align"
+        no-caret
+        text-decoration-none
+      >
+        <template #button-content>
+          <b-icon
+            variant="dark"
+            icon="three-dots-vertical"
+            font-scale="2"
+          ></b-icon>
+        </template>
+        <b-dropdown-item v-on:click="logout">Log out</b-dropdown-item>
       </b-dropdown>
     </div>
     <div class="cart-mobile">
@@ -155,7 +178,18 @@ export default {
         this.$emit("changeShow", data);
       }
     },
+    logout() {
+      const check = this.$store.dispatch("delToken");
+      if (check) {
+        this.$router.push({ name: "Login" });
+      }
+    },
   },
+  computed:{
+    cekToken(){
+      return true
+    }
+  }
 };
 </script>
 
@@ -198,8 +232,11 @@ h2 {
   margin: 10px 20px;
   display: flex;
 }
-.search-icon{
+.search-icon {
   display: block;
+}
+.drop-down-logout {
+  margin: 0;
 }
 @media screen and (max-width: 360px) {
   .cart-mobile {

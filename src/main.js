@@ -14,9 +14,13 @@ import {
   faPlusCircle,
   faTrash,
   faEdit,
+  faEnvelope,
+  faUser,
+  faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VModal from "vue-js-modal";
+import store from "./store/store";
 
 library.add(
   faBars,
@@ -26,7 +30,10 @@ library.add(
   faHistory,
   faPlusCircle,
   faTrash,
-  faEdit
+  faEnvelope,
+  faUser,
+  faEdit,
+  faLock
 );
 Vue.component("fa-icon", FontAwesomeIcon);
 Vue.use(VModal);
@@ -36,5 +43,7 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store: store,
   render: (h) => h(App),
 }).$mount("#app");
+

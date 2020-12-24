@@ -217,18 +217,35 @@ export default {
         order = "price";
         sort = "desc";
       }
-      axios
-        .get(`${process.env.VUE_APP_URL}product?orderBy=${order}&sort=${sort}`)
+      axios({
+        method: "GET",
+        url: `${process.env.VUE_APP_URL}product?orderBy=${order}&sort=${sort}`,
+        headers: {
+          authtoken: this.dataToken,
+        },
+      })
         .then((res) => {
           this.dataproduct = res.data.result;
         })
         .catch((err) => {
           alert(err.message);
         });
+      // .get(`${process.env.VUE_APP_URL}product?orderBy=${order}&sort=${sort}`)
+      // .then((res) => {
+      //   this.dataproduct = res.data.result;
+      // })
+      // .catch((err) => {
+      //   alert(err.message);
+      // });
     },
     onSearch(value) {
-      axios
-        .get(process.env.VUE_APP_URL + "product?search=" + value)
+      axios({
+        method: "GET",
+        url: `${process.env.VUE_APP_URL}product?search="${value}`,
+        headers: {
+          authtoken: this.dataToken,
+        },
+      })
         .then((res) => {
           if (res.data.result == "tidak ada data di table product") {
             this.dataproduct = [];
@@ -239,6 +256,19 @@ export default {
         .catch((err) => {
           alert(err.message);
         });
+
+      // axios
+      //   .get(process.env.VUE_APP_URL + "product?search=" + value)
+      //   .then((res) => {
+      //     if (res.data.result == "tidak ada data di table product") {
+      //       this.dataproduct = [];
+      //     } else {
+      //       this.dataproduct = res.data.result;
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     alert(err.message);
+      //   });
     },
     deleteThisRow(index) {
       this.dataCart.splice(index, 1);
@@ -289,15 +319,23 @@ export default {
         url: process.env.VUE_APP_URL + "history",
         headers: {
           "Content-Type": "application/json",
+          authtoken: this.dataToken,
         },
         data: JSON.parse(JSON.stringify(this.formOrder)),
       })
         .then((res) => {
+          console.log("bukan");
+          console.log(res);
+          // if (condition) {
+            
+          // }
           this.dataCart = [];
           alert(res.data.description);
           this.hideModal("modal-add-cart");
         })
         .catch((err) => {
+          console.log("sini");
+          console.log(err);
           alert(err.message);
         });
     },
@@ -307,18 +345,28 @@ export default {
       }
     },
     getAllData() {
-      axios
-        .get(process.env.VUE_APP_URL + "product")
+      axios({
+        method: "GET",
+        url: process.env.VUE_APP_URL + "product",
+        headers: {
+          authtoken: this.dataToken,
+        },
+      })
         .then((res) => {
           this.dataproduct = res.data.result;
         })
         .catch((err) => {
           alert(err.message);
-          this.getAllData();
         });
     },
   },
   computed: {
+    loggedIn() {
+      return this.$store.getters.loggedIn;
+    },
+    dataToken() {
+      return this.$store.getters.dataToken;
+    },
     countCart() {
       let total = 0;
       for (const res of this.dataCart) {
