@@ -10,7 +10,7 @@
         v-on:sortToHome="onSort"
       />
       <main class="row">
-        <side-nav :modalAdd="true" />
+        <side-nav :roleAdmin="roleAdmin" />
         <div class="content-wrap col">
           <div class="container">
             <b-modal id="modal-add-cart" class="modal-body" hide-footer>
@@ -187,6 +187,7 @@ export default {
       options: [],
       randomInvoice: "",
       ppn: 0,
+      roleAdmin: false,
     };
   },
   methods: {
@@ -221,7 +222,7 @@ export default {
         method: "GET",
         url: `${process.env.VUE_APP_URL}product?orderBy=${order}&sort=${sort}`,
         headers: {
-          authtoken: this.dataToken,
+          authtoken: this.dataToken.token,
         },
       })
         .then((res) => {
@@ -244,7 +245,7 @@ export default {
         method: "GET",
         url: `${process.env.VUE_APP_URL}product?search="${value}`,
         headers: {
-          authtoken: this.dataToken,
+          authtoken: this.dataToken.token,
         },
       })
         .then((res) => {
@@ -321,7 +322,7 @@ export default {
         url: process.env.VUE_APP_URL + "history",
         headers: {
           "Content-Type": "application/json",
-          authtoken: this.dataToken,
+          authtoken: this.dataToken.token,
         },
         data: JSON.parse(JSON.stringify(this.formOrder)),
       })
@@ -353,7 +354,7 @@ export default {
         method: "GET",
         url: process.env.VUE_APP_URL + "product",
         headers: {
-          authtoken: this.dataToken,
+          authtoken: this.dataToken.token,
         },
       })
         .then((res) => {
@@ -391,6 +392,11 @@ export default {
     },
   },
   mounted() {
+    if (this.$store.getters.dataToken.role === "admin") {
+      this.roleAdmin = true;
+    } else {
+      this.roleAdmin =false;
+    }
     this.getAllData();
   },
 };

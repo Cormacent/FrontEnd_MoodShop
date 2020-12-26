@@ -3,7 +3,7 @@
     <section class="main-section">
       <header-item :text="'History'" :searchicon="false" :filterEdit="false" />
       <main class="row">
-        <side-nav :modalAdd="false" />
+        <side-nav :roleAdmin="roleAdmin" />
         <div class="content-wrap col">
           <div class="container">
             <section class="card-info">
@@ -103,6 +103,7 @@ export default {
         },
       ],
       items: [],
+      roleAdmin: false,
     };
   },
   methods: {
@@ -111,7 +112,7 @@ export default {
         method: "GET",
         url: process.env.VUE_APP_URL + "history",
         headers: {
-          authtoken: this.dataToken,
+          authtoken: this.dataToken.token,
         },
       })
         .then((res) => {
@@ -138,6 +139,11 @@ export default {
     },
   },
   mounted() {
+    if (this.$store.getters.dataToken.role === "admin") {
+      this.roleAdmin = true;
+    } else {
+      this.roleAdmin = false;
+    }
     this.getAllData();
   },
 };

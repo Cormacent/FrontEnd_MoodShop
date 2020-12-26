@@ -75,8 +75,8 @@ const store = new Vuex.Store({
       return state.token != null;
     },
     dataToken(state) {
-      if (state.token != null) {
-        return state.token;
+      if (state.token != null && state.role != null) {
+        return state;
       }
     },
   },

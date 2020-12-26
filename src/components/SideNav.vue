@@ -7,7 +7,7 @@
     <router-link to="/history" class="router button">
       <fa-icon class="icon" :icon="['fas', 'history']" size="2x" />
     </router-link>
-    <router-link to="/edit" class="router button">
+    <router-link to="/edit" :class="roleAdmin ? 'router button' : 'hide'">
       <fa-icon
         class="icon text-success"
         :icon="['fas', 'plus-circle']"
@@ -21,7 +21,7 @@
 export default {
   name: "side-nav",
   props: {
-    modalAdd: {
+    roleAdmin: {
       type: Boolean,
       required: true,
     },
@@ -54,5 +54,8 @@ export default {
   top: 60px;
   margin: 0;
   z-index: 1;
+}
+.hide {
+  display: none;
 }
 </style>

@@ -9,7 +9,7 @@
         v-on:changeShow="changeShow"
       />
       <main class="row">
-        <side-nav :modalAdd="false" />
+        <side-nav :roleAdmin="roleAdmin" />
         <div class="content-wrap col">
           <div class="container">
             <section v-if="flagShowTable" class="row">
@@ -308,6 +308,7 @@ export default {
   components: { SideNav, HeaderItem },
   data() {
     return {
+      roleAdmin: false,
       flagEdit: true,
       flagShowTable: true,
       fieldsProduct: [
@@ -363,8 +364,13 @@ export default {
   },
   methods: {
     getAllProduct() {
-      axios
-        .get(process.env.VUE_APP_URL + "product")
+      axios({
+        method: "GET",
+        url: process.env.VUE_APP_URL + "product",
+        headers: {
+          authtoken: this.dataToken.token,
+        },
+      })
         .then((res) => {
           this.itemsProduct = res.data.result;
         })
@@ -373,8 +379,13 @@ export default {
         });
     },
     getAllCategory() {
-      axios
-        .get(process.env.VUE_APP_URL + "category")
+      axios({
+        method: "GET",
+        url: process.env.VUE_APP_URL + "category",
+        headers: {
+          authtoken: this.dataToken.token,
+        },
+      })
         .then((res) => {
           this.options = [
             {
@@ -421,6 +432,7 @@ export default {
         url: process.env.VUE_APP_URL + "product",
         headers: {
           "Content-Type": "multipart/form-data",
+          authtoken: this.dataToken.token,
         },
         data: formData,
       })
@@ -440,6 +452,7 @@ export default {
         url: process.env.VUE_APP_URL + "category",
         headers: {
           "Content-Type": "application/json",
+          authtoken: this.dataToken.token,
         },
         data: JSON.parse(JSON.stringify(this.formEditCategory)),
       })
@@ -449,7 +462,6 @@ export default {
           this.resetData();
         })
         .catch((err) => {
-          console.log(err);
           alert(err);
           this.resetData();
         });
@@ -474,6 +486,7 @@ export default {
           url: process.env.VUE_APP_URL + "product",
           headers: {
             "Content-Type": "multipart/form-data",
+            authtoken: this.dataToken.token,
           },
           data: formData,
         })
@@ -497,6 +510,7 @@ export default {
           url: process.env.VUE_APP_URL + "category",
           headers: {
             "Content-Type": "application/json",
+            authtoken: this.dataToken.token,
           },
           data: JSON.parse(JSON.stringify(this.formAddCategory)),
         })
@@ -514,8 +528,13 @@ export default {
       }
     },
     delCategory(data) {
-      axios
-        .delete(process.env.VUE_APP_URL + "category/" + data.id)
+      axios({
+        method: "DELETE",
+        url: process.env.VUE_APP_URL + "category/" + data.id,
+        headers: {
+          authtoken: this.dataToken.token,
+        },
+      })
         .then((res) => {
           this.getAllCategory();
           alert(res.statusText);
@@ -526,8 +545,13 @@ export default {
         });
     },
     delProduct(data) {
-      axios
-        .delete(process.env.VUE_APP_URL + "product/" + data.id)
+      axios({
+        method: "DELETE",
+        url: process.env.VUE_APP_URL + "product/" + data.id,
+        headers: {
+          authtoken: this.dataToken.token,
+        },
+      })
         .then((res) => {
           this.getAllProduct();
           alert(res.statusText);
@@ -535,6 +559,12 @@ export default {
         .catch((err) => {
           alert(err);
         });
+    },
+    logout() {
+      const check = this.$store.dispatch("delToken");
+      if (check) {
+        this.$router.push({ name: "Login" });
+      }
     },
     setDataProduct(item) {
       this.formEditProduct.id = item.id;
@@ -562,7 +592,20 @@ export default {
       this.flagShowTable = value;
     },
   },
+  computed: {
+    loggedIn() {
+      return this.$store.getters.loggedIn;
+    },
+    dataToken() {
+      return this.$store.getters.dataToken;
+    },
+  },
   mounted() {
+    if (this.$store.getters.dataToken.role === "admin") {
+      this.roleAdmin = true;
+    } else {
+      this.roleAdmin = false;
+    }
     this.getAllProduct();
     this.getAllCategory();
   },

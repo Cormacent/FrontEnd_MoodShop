@@ -5,76 +5,22 @@
         <fa-icon :icon="['fas', 'bars']" size="2x" />
       </b-button>
       <h2>{{ text }}</h2>
-
-      <b-collapse
-        id="search-collapse"
-        :class="searchicon ? 'search-bar' : 'hide'"
+    </div>
+    <div :class="searchicon ? 'search-bar' : 'hide'">
+      <b-form-input
+        id="searchInput"
+        type="search"
+        v-model="inputValue"
+        v-on:keyup="emitToParent"
+        class="mr-3"
+        placeholder="Search product here.."
       >
-        <b-form-input
-          id="searchInput"
-          type="search"
-          v-model="inputValue"
-          v-on:keyup="emitToParent"
-          class="mr-3"
-          placeholder="Search product here.."
-        >
-        </b-form-input>
-        <b-dropdown
-          class="dropDownSort"
-          variant="link"
-          right
-          v-model="dropdownValue.dropdownSelected"
-          text="Right Align"
-          no-caret
-          text-decoration-none
-        >
-          <template #button-content>
-            <b-icon
-              variant="dark"
-              icon="filter-right"
-              aria-hidden="true"
-            ></b-icon>
-          </template>
-          <b-dropdown-item
-            v-for="option in dropdownValue.options"
-            :key="option.value"
-            :value="option.value"
-            @click="dropDownSort(option.value)"
-          >
-            {{ option.text }}
-          </b-dropdown-item>
-        </b-dropdown>
-      </b-collapse>
-      <b-button
-        v-b-toggle:search-collapse
-        variant="white"
-        :class="searchicon ? 'search-icon' : 'hide'"
-      >
-        <fa-icon :icon="['fas', 'search']" size="2x" />
-      </b-button>
+      </b-form-input>
       <b-dropdown
-        :class="filterEdit ? 'search-bar' : 'hide'"
-        variant="dark"
-        right
-        v-model="dropdownValue.dropdownSelected"
-        text="Right Align"
-      >
-        <template #button-content>
-          <b-icon icon="filter-right" aria-hidden="true"></b-icon>
-        </template>
-        <b-dropdown-item
-          v-for="option in ddChangeValue.options"
-          :key="option.value"
-          :value="option.value"
-          @click="dropdownChange(option.value)"
-        >
-          {{ option.text }}
-        </b-dropdown-item>
-      </b-dropdown>
-      <b-dropdown
-        class="drop-down-logout"
+        class="dropDownSort"
         variant="link"
         right
+        v-model="dropdownValue.dropdownSelected"
         text="Right Align"
         no-caret
         text-decoration-none
@@ -82,14 +28,57 @@
         <template #button-content>
           <b-icon
             variant="dark"
-            icon="three-dots-vertical"
-            font-scale="2"
+            icon="filter-right"
+            aria-hidden="true"
           ></b-icon>
         </template>
-        <b-dropdown-item v-on:click="logout">Log out</b-dropdown-item>
+        <b-dropdown-item
+          v-for="option in dropdownValue.options"
+          :key="option.value"
+          :value="option.value"
+          @click="dropDownSort(option.value)"
+        >
+          {{ option.text }}
+        </b-dropdown-item>
       </b-dropdown>
     </div>
-    <div class="cart-mobile">
+    <b-dropdown
+      :class="filterEdit ? 'search-bar' : 'hide'"
+      variant="dark"
+      right
+      v-model="dropdownValue.dropdownSelected"
+      text="Right Align"
+    >
+      <template #button-content>
+        <b-icon icon="filter-right" aria-hidden="true"></b-icon>
+      </template>
+      <b-dropdown-item
+        v-for="option in ddChangeValue.options"
+        :key="option.value"
+        :value="option.value"
+        @click="dropdownChange(option.value)"
+      >
+        {{ option.text }}
+      </b-dropdown-item>
+    </b-dropdown>
+    <b-dropdown
+      class="drop-down-logout"
+      variant="link"
+      right
+      text="Right Align"
+      no-caret
+      text-decoration-none
+    >
+      <template #button-content>
+        <b-icon
+          variant="dark"
+          icon="three-dots-vertical"
+          font-scale="2"
+        ></b-icon>
+      </template>
+      <b-dropdown-item v-on:click="logout">Log out</b-dropdown-item>
+    </b-dropdown>
+    <div :class="searchicon ? 'search-icon cart-mobile' : 'hide'">
       <div class="vl"></div>
       <b-button v-b-toggle:cart-collapse variant="white">
         <fa-icon :icon="['fas', 'shopping-cart']" size="2x" />
@@ -185,11 +174,11 @@ export default {
       }
     },
   },
-  computed:{
-    cekToken(){
-      return true
-    }
-  }
+  computed: {
+    cekToken() {
+      return true;
+    },
+  },
 };
 </script>
 
@@ -229,7 +218,7 @@ h2 {
   font-size: 1rem;
 }
 .search-bar {
-  margin: 10px 20px;
+  margin: 10px 0;
   display: flex;
 }
 .search-icon {
@@ -246,9 +235,9 @@ h2 {
     font-size: 1em;
     display: none;
   }
-  .dropDownSort {
+  /* .dropDownSort {
     display: none;
-  }
+  } */
 }
 @media screen and (min-width: 361px) {
   .cart-mobile {
@@ -258,9 +247,9 @@ h2 {
     font-size: 1em;
     display: none;
   }
-  .dropDownSort {
+  /* .dropDownSort {
     display: none;
-  }
+  } */
 }
 @media screen and (min-width: 1200px) {
   .cart-mobile {
@@ -270,8 +259,8 @@ h2 {
     font-size: 2em;
     display: block;
   }
-  .dropDownSort {
+  /* .dropDownSort {
     display: block;
-  }
+  } */
 }
 </style>
