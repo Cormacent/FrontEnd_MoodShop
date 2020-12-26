@@ -223,7 +223,7 @@ export default {
 .wrapper {
   background-color: white;
   width: 60%;
-  height: 60vh;
+  height: 70%;
   overflow: auto;
   display: flex;
   justify-content: space-evenly;
@@ -247,5 +247,41 @@ export default {
 }
 img {
   width: 100%;
+}
+@media screen and (max-width: 360px) {
+  .image-login {
+    display: none;
+  }
+  .login-form {
+    width: 100%;
+  }
+  .wrapper {
+    width: 80%;
+    height: 80%;
+  }
+}
+@media screen and (min-width: 361px) {
+  .image-login {
+    display: none;
+  }
+  .login-form {
+    width: 100%;
+  }
+  .wrapper {
+    width: 80%;
+    height: 80%;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .image-login {
+    display: flex;
+  }
+  .login-form {
+    width: 50%;
+  }
+  .wrapper {
+    width: 60%;
+    height: 70%;
+  }
 }
 </style>

@@ -1,7 +1,12 @@
 <template>
   <div class="history">
     <section class="main-section">
-      <header-item :text="'History'" :searchicon="false" :filterEdit="false" />
+      <header-item
+        class="header"
+        :text="'History'"
+        :searchicon="false"
+        :filterEdit="false"
+      />
       <main class="row">
         <side-nav :roleAdmin="roleAdmin" />
         <div class="content-wrap col">
@@ -187,5 +192,9 @@ export default {
 main {
   margin: 0;
   padding: 0;
+}
+
+.header {
+  z-index: 1;
 }
 </style>
