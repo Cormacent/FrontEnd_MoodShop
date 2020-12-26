@@ -12,7 +12,6 @@
         type="search"
         v-model="inputValue"
         v-on:keyup="emitToParent"
-        class="mr-3"
         placeholder="Search product here.."
       >
       </b-form-input>
@@ -61,7 +60,14 @@
         {{ option.text }}
       </b-dropdown-item>
     </b-dropdown>
-    <b-dropdown
+   
+    <div :class="searchicon ? 'search-icon cart-mobile' : 'hide'">
+      <div class="vl"></div>
+      <b-button v-b-toggle:cart-collapse variant="white">
+        <fa-icon :icon="['fas', 'shopping-cart']" size="lg" />
+      </b-button>
+    </div>
+     <b-dropdown
       class="drop-down-logout"
       variant="link"
       right
@@ -78,12 +84,6 @@
       </template>
       <b-dropdown-item v-on:click="logout">Log out</b-dropdown-item>
     </b-dropdown>
-    <div :class="searchicon ? 'search-icon cart-mobile' : 'hide'">
-      <div class="vl"></div>
-      <b-button v-b-toggle:cart-collapse variant="white">
-        <fa-icon :icon="['fas', 'shopping-cart']" size="2x" />
-      </b-button>
-    </div>
   </header>
 </template>
 
@@ -207,7 +207,7 @@ h2 {
 .vl {
   border-left: 2px solid black;
   height: auto;
-  margin: 10px 5px;
+  margin: 10px 0;
 }
 
 .title {
@@ -235,9 +235,9 @@ h2 {
     font-size: 1em;
     display: none;
   }
-  /* .dropDownSort {
-    display: none;
-  } */
+   .title{
+    width: auto;
+  }
 }
 @media screen and (min-width: 361px) {
   .cart-mobile {
@@ -247,9 +247,9 @@ h2 {
     font-size: 1em;
     display: none;
   }
-  /* .dropDownSort {
-    display: none;
-  } */
+  .title{
+    width: auto;
+  }
 }
 @media screen and (min-width: 1200px) {
   .cart-mobile {
@@ -259,8 +259,8 @@ h2 {
     font-size: 2em;
     display: block;
   }
-  /* .dropDownSort {
-    display: block;
-  } */
+   .title{
+    width: 100%;
+  }
 }
 </style>
