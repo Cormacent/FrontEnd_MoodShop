@@ -220,7 +220,7 @@ export default {
       }
       axios({
         method: "GET",
-        url: `${process.env.VUE_APP_URL}product?orderBy=${order}&sort=${sort}`,
+        url: `${process.env.VUE_APP_URL}product/sort?orderBy=${order}&sort=${sort}`,
         headers: {
           authtoken: this.dataToken.token,
         },
@@ -232,24 +232,17 @@ export default {
           alert(err.message);
           this.logout();
         });
-      // .get(`${process.env.VUE_APP_URL}product?orderBy=${order}&sort=${sort}`)
-      // .then((res) => {
-      //   this.dataproduct = res.data.result;
-      // })
-      // .catch((err) => {
-      //   alert(err.message);
-      // });
     },
     onSearch(value) {
       axios({
         method: "GET",
-        url: `${process.env.VUE_APP_URL}product?search="${value}`,
+        url: `${process.env.VUE_APP_URL}product/search?name=${value}`,
         headers: {
           authtoken: this.dataToken.token,
         },
       })
         .then((res) => {
-          if (res.data.result == "tidak ada data di table product") {
+          if (res.data.result == "No data in the product table") {
             this.dataproduct = [];
           } else {
             this.dataproduct = res.data.result;
@@ -259,19 +252,6 @@ export default {
           alert(err.message);
           this.logout();
         });
-
-      // axios
-      //   .get(process.env.VUE_APP_URL + "product?search=" + value)
-      //   .then((res) => {
-      //     if (res.data.result == "tidak ada data di table product") {
-      //       this.dataproduct = [];
-      //     } else {
-      //       this.dataproduct = res.data.result;
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     alert(err.message);
-      //   });
     },
     deleteThisRow(index) {
       this.dataCart.splice(index, 1);
@@ -361,8 +341,13 @@ export default {
           this.dataproduct = res.data.result;
         })
         .catch((err) => {
-          alert(`Your token has expired say : ${err.message}`);
-          this.logout();
+          if (err.message === "Network Error") {
+            alert(err.message + "try to reconnect");
+            this.getAllData;
+          } else {
+            alert(`Your token has expired say : ${err.message}`);
+            this.logout();
+          }
         });
     },
     logout() {
@@ -395,7 +380,7 @@ export default {
     if (this.$store.getters.dataToken.role === "admin") {
       this.roleAdmin = true;
     } else {
-      this.roleAdmin =false;
+      this.roleAdmin = false;
     }
     this.getAllData();
   },
