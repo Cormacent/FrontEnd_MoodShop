@@ -145,9 +145,9 @@ export default {
         password: null,
       },
       formRegister: {
-        email: "",
-        name: "",
-        password: "",
+        email: null,
+        name: null,
+        password: null,
       },
     };
   },
@@ -182,19 +182,18 @@ export default {
       ) {
         alert("Please enter your email and password !");
       } else {
+        console.log(this.formRegister);
         this.$store
           .dispatch("createAccount", this.formRegister)
-          .then((res) => {
+          .then(() => {
             alert(
               "success create account, please log in using the account you created earlier"
             );
-            console.log(res);
             this.loginView = true;
             this.resetInput;
           })
           .catch((err) => {
             this.resetInput;
-            console.log(err);
             alert(err);
           });
       }

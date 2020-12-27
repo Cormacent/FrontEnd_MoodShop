@@ -180,9 +180,9 @@ export default {
       dataCart: [],
       formOrder: {
         amount: 0,
-        invoice: "",
+        invoice: null,
         cashier: "Zaki Ganteng",
-        name_product: "",
+        name_product: null,
       },
       options: [],
       randomInvoice: "",

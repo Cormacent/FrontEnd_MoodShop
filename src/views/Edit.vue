@@ -340,24 +340,24 @@ export default {
       itemsProduct: [],
       itemsCategory: [],
       formEditProduct: {
-        id: "",
+        id: null,
         image: [],
-        name: "",
+        name: null,
         price: null,
-        id_category: "",
+        id_category: null,
       },
       formAddProduct: {
         image: [],
-        name: "",
+        name: null,
         price: null,
-        id_category: "",
+        id_category: null,
       },
       formAddCategory: {
-        name: "",
+        name: null,
       },
       formEditCategory: {
-        id: "",
-        name: "",
+        id: null,
+        name: null,
       },
       options: [],
     };

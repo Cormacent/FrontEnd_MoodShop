@@ -62,6 +62,11 @@ const store = new Vuex.Store({
           data: JSON.parse(JSON.stringify(form)),
         })
           .then((res) => {
+            if (
+              res.message == "please fill in all the data provided completely"
+            ) {
+              reject(res.message);
+            }
             resolve(res);
           })
           .catch((err) => {
