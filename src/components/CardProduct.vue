@@ -54,7 +54,7 @@ export default {
 .content {
   padding: 0 10px 10px 10px;
 }
-.divider{
+.divider {
   margin: 0px;
 }
 img {
@@ -83,5 +83,43 @@ img:hover {
   font-size: 1rem;
   font-weight: bold;
   margin: 0;
+}
+
+@media screen and (max-width: 360px) {
+  img {
+    width: 150px;
+  }
+  .image {
+    width: 150px;
+    height: 100px;
+  }
+  .item {
+    margin: 5px;
+  }
+}
+
+@media screen and (min-width: 360px) {
+  img {
+    width: 160px;
+  }
+  .image {
+    width: 160px;
+    height: 120px;
+  }
+  .item {
+    margin: 5px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  img {
+    width: 250px;
+  }
+  .image {
+    width: 250px;
+    height: 200px;
+  }
+  .item {
+    margin: 10px;
+  }
 }
 </style>

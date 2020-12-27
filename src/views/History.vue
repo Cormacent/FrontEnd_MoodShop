@@ -169,15 +169,15 @@ export default {
 }
 .card-info {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
+  justify-content: space-between;
   width: 100%;
 }
 .card-style {
-  max-width: 18vw;
-  width: 50%;
+  max-width: 300px;
+  width: 100%;
   height: 15vh;
-  margin: 20px 0;
+  margin: 20px 20px;
 }
 .chart {
   height: 300px;

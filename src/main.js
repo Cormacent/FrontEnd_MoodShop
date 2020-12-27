@@ -6,8 +6,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
-  faBars,
-  faSearch,
   faShoppingCart,
   faUtensils,
   faHistory,
@@ -23,8 +21,6 @@ import VModal from "vue-js-modal";
 import store from "./store/store";
 
 library.add(
-  faBars,
-  faSearch,
   faShoppingCart,
   faUtensils,
   faHistory,

@@ -1,25 +1,91 @@
 <template>
   <header class="shadow-sm">
     <div class="title">
-      <b-button v-b-toggle:navbar-collapse variant="white" class="ml-1">
-        <fa-icon :icon="['fas', 'bars']" size="2x" />
+      <b-button v-b-toggle:navbar-collapse variant="white" class="ml-2">
+        <!-- <fa-icon :icon="['fas', 'bars']" size="2x" /> -->
+           <b-icon
+              variant="dark"
+              icon="list"
+              aria-hidden="true"
+              scale="2x"
+            ></b-icon>
       </b-button>
       <h2>{{ text }}</h2>
     </div>
-    <div :class="searchicon ? 'search-bar' : 'hide'">
-      <b-form-input
-        id="searchInput"
-        type="search"
-        v-model="inputValue"
-        v-on:keyup="emitToParent"
-        placeholder="Search product here.."
-      >
-      </b-form-input>
+    <div class="wrap-function">
+      <div :class="searchicon ? 'display' : 'hide'">
+        <b-form-input
+          id="searchInput"
+          type="search"
+          v-model="inputValue"
+          v-on:keyup="emitToParent"
+          placeholder="Search product here.."
+        >
+        </b-form-input>
+        <b-dropdown
+          class="dropDownSort"
+          variant="link"
+          right
+          v-model="dropdownValue.dropdownSelected"
+          text="Right Align"
+          no-caret
+          text-decoration-none
+        >
+          <template #button-content>
+            <b-icon
+              variant="dark"
+              icon="filter-right"
+              aria-hidden="true"
+            ></b-icon>
+          </template>
+          <b-dropdown-item
+            v-for="option in dropdownValue.options"
+            :key="option.value"
+            :value="option.value"
+            @click="dropDownSort(option.value)"
+          >
+            {{ option.text }}
+          </b-dropdown-item>
+        </b-dropdown>
+      </div>
       <b-dropdown
-        class="dropDownSort"
+        :class="filterEdit ? 'display mr-3' : 'hide'"
+        aria-hidden="true"
         variant="link"
         right
+        no-caret
+        text-decoration-none
         v-model="dropdownValue.dropdownSelected"
+        text="Right Align"
+      >
+        <template #button-content>
+          <b-icon
+            icon="filter-right"
+            variant="dark"
+            aria-hidden="true"
+          ></b-icon>
+        </template>
+        <b-dropdown-item
+          v-for="option in ddChangeValue.options"
+          :key="option.value"
+          :value="option.value"
+          @click="dropdownChange(option.value)"
+        >
+          {{ option.text }}
+        </b-dropdown-item>
+      </b-dropdown>
+
+      <div :class="searchicon ? 'display cart-mobile' : 'hide'">
+        <div class="vl"></div>
+        <b-button v-b-toggle:cart-collapse variant="white">
+          <fa-icon :icon="['fas', 'shopping-cart']" size="lg" />
+        </b-button>
+      </div>
+
+      <b-dropdown
+        class="drop-down-logout"
+        variant="link"
+        right
         text="Right Align"
         no-caret
         text-decoration-none
@@ -27,63 +93,13 @@
         <template #button-content>
           <b-icon
             variant="dark"
-            icon="filter-right"
-            aria-hidden="true"
+            icon="three-dots-vertical"
+            font-scale="1"
           ></b-icon>
         </template>
-        <b-dropdown-item
-          v-for="option in dropdownValue.options"
-          :key="option.value"
-          :value="option.value"
-          @click="dropDownSort(option.value)"
-        >
-          {{ option.text }}
-        </b-dropdown-item>
+        <b-dropdown-item v-on:click="logout">Log out</b-dropdown-item>
       </b-dropdown>
     </div>
-    <b-dropdown
-      :class="filterEdit ? 'search-bar' : 'hide'"
-      variant="dark"
-      right
-      v-model="dropdownValue.dropdownSelected"
-      text="Right Align"
-    >
-      <template #button-content>
-        <b-icon icon="filter-right" aria-hidden="true"></b-icon>
-      </template>
-      <b-dropdown-item
-        v-for="option in ddChangeValue.options"
-        :key="option.value"
-        :value="option.value"
-        @click="dropdownChange(option.value)"
-      >
-        {{ option.text }}
-      </b-dropdown-item>
-    </b-dropdown>
-   
-    <div :class="searchicon ? 'search-icon cart-mobile' : 'hide'">
-      <div class="vl"></div>
-      <b-button v-b-toggle:cart-collapse variant="white">
-        <fa-icon :icon="['fas', 'shopping-cart']" size="lg" />
-      </b-button>
-    </div>
-     <b-dropdown
-      class="drop-down-logout"
-      variant="link"
-      right
-      text="Right Align"
-      no-caret
-      text-decoration-none
-    >
-      <template #button-content>
-        <b-icon
-          variant="dark"
-          icon="three-dots-vertical"
-          font-scale="2"
-        ></b-icon>
-      </template>
-      <b-dropdown-item v-on:click="logout">Log out</b-dropdown-item>
-    </b-dropdown>
   </header>
 </template>
 
@@ -187,27 +203,21 @@ header {
   display: flex;
   position: sticky;
   background: white;
+  justify-content: space-between;
   top: 0;
   height: 54px;
 }
 h2 {
   margin: auto;
 }
-
-.icon {
-  margin: 10px 20px;
-}
 .hide {
-  display: none;
-}
-.cart-mobile {
   display: none;
 }
 
 .vl {
   border-left: 2px solid black;
   height: auto;
-  margin: 10px 0;
+  margin: 0;
 }
 
 .title {
@@ -217,37 +227,32 @@ h2 {
   width: 100%;
   font-size: 1rem;
 }
-.search-bar {
+.wrap-function {
+  display: flex;
+}
+.display {
   margin: 10px 0;
   display: flex;
 }
-.search-icon {
-  display: block;
-}
+
 .drop-down-logout {
   margin: 0;
 }
 @media screen and (max-width: 360px) {
-  .cart-mobile {
-    display: flex;
-  }
   h2 {
     font-size: 1em;
     display: none;
   }
-   .title{
+  .title {
     width: auto;
   }
 }
 @media screen and (min-width: 361px) {
-  .cart-mobile {
-    display: flex;
-  }
   h2 {
     font-size: 1em;
     display: none;
   }
-  .title{
+  .title {
     width: auto;
   }
 }
@@ -259,7 +264,7 @@ h2 {
     font-size: 2em;
     display: block;
   }
-   .title{
+  .title {
     width: 100%;
   }
 }
