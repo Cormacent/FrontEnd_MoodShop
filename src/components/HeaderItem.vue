@@ -2,7 +2,6 @@
   <header class="shadow-sm">
     <div class="title">
       <b-button v-b-toggle:navbar-collapse variant="white" class="ml-2">
-        <!-- <fa-icon :icon="['fas', 'bars']" size="2x" /> -->
            <b-icon
               variant="dark"
               icon="list"
@@ -19,7 +18,7 @@
           type="search"
           v-model="inputValue"
           v-on:keyup="emitToParent"
-          placeholder="Search product here.."
+          placeholder="Search here.."
         >
         </b-form-input>
         <b-dropdown

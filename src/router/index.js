@@ -5,6 +5,7 @@ import History from "../views/History.vue";
 import Edit from "../views/Edit.vue";
 import Login from "../views/Login.vue";
 import store from "../store/store";
+import NotFound from "../views/404.vue";
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,15 @@ let router = new VueRouter({
       path: "/login",
       name: "Login",
       component: Login,
+    },
+    {
+      path: "*",
+      redirect: "/404",
+    },
+    {
+      path: "/404",
+      name: "notfound",
+      component: NotFound,
     },
   ],
 });
