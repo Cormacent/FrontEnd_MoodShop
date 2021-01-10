@@ -18,7 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VModal from "vue-js-modal";
-import store from "./store/store";
+import store from "./store";
 
 library.add(
   faShoppingCart,

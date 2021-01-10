@@ -4,7 +4,7 @@ import Home from "../views/Home.vue";
 import History from "../views/History.vue";
 import Edit from "../views/Edit.vue";
 import Login from "../views/Login.vue";
-import store from "../store/store";
+import store from "../store";
 import NotFound from "../views/404.vue";
 
 Vue.use(VueRouter);
@@ -56,6 +56,11 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
+  } else if (
+    store.getters.loggedIn &&
+    to.matched.some((record) => record.name == "Login")
+  ) {
+    next(router.replace(from));
   } else {
     next();
   }

@@ -2,12 +2,12 @@
   <header class="shadow-sm">
     <div class="title">
       <b-button v-b-toggle:navbar-collapse variant="white" class="ml-2">
-           <b-icon
-              variant="dark"
-              icon="list"
-              aria-hidden="true"
-              scale="2x"
-            ></b-icon>
+        <b-icon
+          variant="dark"
+          icon="list"
+          aria-hidden="true"
+          scale="2x"
+        ></b-icon>
       </b-button>
       <h2>{{ text }}</h2>
     </div>
@@ -17,10 +17,12 @@
           id="searchInput"
           type="search"
           v-model="inputValue"
-          v-on:keyup="emitToParent"
+          v-on:keyup="onSearch"
           placeholder="Search here.."
         >
         </b-form-input>
+
+        <!-- DROPDOWN SORT -->
         <b-dropdown
           class="dropDownSort"
           variant="link"
@@ -47,6 +49,8 @@
           </b-dropdown-item>
         </b-dropdown>
       </div>
+
+      <!-- DROPDOWN PRODUCT OR CATEGORY -->
       <b-dropdown
         :class="filterEdit ? 'display mr-3' : 'hide'"
         aria-hidden="true"
@@ -81,6 +85,7 @@
         </b-button>
       </div>
 
+      <!-- LOGOUT -->
       <b-dropdown
         class="drop-down-logout"
         variant="link"
@@ -103,6 +108,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "header-item",
   props: {
@@ -138,44 +145,28 @@ export default {
         dropdownSelected: "1",
         options: [
           {
-            value: "1",
-            text: "asc - name",
+            value: "name",
+            text: "name",
           },
           {
-            value: "2",
-            text: "asc - category",
+            value: "id_category",
+            text: "category",
           },
           {
-            value: "3",
-            text: "asc - price",
-          },
-          {
-            value: "4",
-            text: "desc - name",
-          },
-          {
-            value: "5",
-            text: "desc - category",
-          },
-          {
-            value: "6",
-            text: "desc - price",
+            value: "price",
+            text: "price",
           },
         ],
       },
     };
   },
   methods: {
-    emitToParent() {
-      this.$emit("searchToHome", this.inputValue);
+    ...mapActions(["sortProduct", "searchProduct"]),
+    onSearch() {
+      this.searchProduct(this.inputValue);
     },
-    changeItem() {
-      console.log("masuk");
-    },
-    dropDownSort(data) {
-      if (data != null) {
-        this.$emit("sortToHome", data);
-      }
+    dropDownSort(order) {
+      this.sortProduct({ sort: "DESC", order });
     },
     dropdownChange(data) {
       if (data != null) {
@@ -183,15 +174,11 @@ export default {
       }
     },
     logout() {
-      const check = this.$store.dispatch("delToken");
-      if (check) {
-        this.$router.push({ name: "Login" });
-      }
-    },
-  },
-  computed: {
-    cekToken() {
-      return true;
+      // const check = 
+      this.$store.dispatch("delToken");
+      // if (check) {
+      //   this.$router.push({ name: "Login" });
+      // }
     },
   },
 };

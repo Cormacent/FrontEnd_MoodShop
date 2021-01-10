@@ -12,7 +12,6 @@
 #app,
 #app::before,
 #appafter {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   font-family: "Airbnb Cereal App";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

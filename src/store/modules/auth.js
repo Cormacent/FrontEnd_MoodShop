@@ -1,12 +1,10 @@
-import Vue from "vue";
-import Vuex from "vuex";
 import Axios from "axios";
+import router from "../../router";
 
-Vue.use(Vuex);
-const store = new Vuex.Store({
+const auth = {
   state: {
-    token: localStorage.getItem("access_token") || null,
-    role: localStorage.getItem("access_role") || null,
+    token:   null,
+    role:   null,
     email: "",
     username: "",
   },
@@ -20,7 +18,7 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    getToken(context, auth) {
+    getToken({ commit }, auth) {
       return new Promise((resolve, reject) => {
         Axios({
           method: "post",
@@ -31,25 +29,25 @@ const store = new Vuex.Store({
           data: JSON.parse(JSON.stringify(auth)),
         })
           .then((res) => {
-            if (res.data.result[0].result === undefined) {
+            if (!res.data.result[0].status) {
               reject(res.data.result[0].message);
             }
-            const data = res.data.result[0].result;
-            localStorage.setItem("access_token", data.token);
-            localStorage.setItem("access_role", data.role);
-            context.commit("getToken", data);
-            resolve(res.data.result[0].result);
+            const data = res.data.result[0].result; 
+            commit("getToken", data);
+            resolve(true);
           })
           .catch((err) => {
             reject(err);
           });
       });
     },
-    delToken(context) {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("access_role");
-      context.commit("delToken");
-      return true;
+    delToken({commit}) { 
+      commit("delToken");
+      commit("deleteProduct")
+      commit("emptyCategory")
+      commit("emptyCart")
+      
+      router.replace({ name: "Login" });
     },
     createAccount(context, form) {
       return new Promise((resolve, reject) => {
@@ -85,5 +83,6 @@ const store = new Vuex.Store({
       }
     },
   },
-});
-export default store;
+};
+
+export default auth;

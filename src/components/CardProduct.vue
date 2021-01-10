@@ -3,11 +3,18 @@
     <div class="image text-center">
       <img :src="image" :alt="name" />
     </div>
-    <hr class="divider" />
     <div class="content">
       <p class="title">{{ name }}</p>
-      <p class="value">{{ price }} K</p>
-      <p class="title text-info">{{ category }}</p>
+      <div class="content-1">
+        <p class="title text-info">{{ category }}</p>
+        <p class="value">{{ price }} K</p>
+      </div>
+    </div>
+    <hr class="divider" />
+    <div class="text-right">
+      <b-button class="m-2" variant="outline-success"
+        >Add to cart <fa-icon :icon="['fas', 'shopping-cart']" size="lg"
+      /></b-button>
     </div>
   </div>
 </template>
@@ -45,20 +52,24 @@ export default {
   margin: 10px;
   transition: 0.5s;
   background-color: white;
+  box-shadow: grey;
 }
 .item:hover {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
-  border-radius: 10px;
+  /* border-radius: 10px; */
 }
 .content {
-  padding: 0 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+}
+.content-1 {
+  display: flex;
+  justify-content: space-between;
 }
 .divider {
-  margin: 0px;
+  margin: 5px 10px;
 }
 img {
-  width: 250px;
   max-width: 100%;
   max-height: 100%;
 }
@@ -66,19 +77,15 @@ img:hover {
   transition: 0.5s;
   border-radius: 10px 10px 0px 0px;
 }
-.image {
-  width: 250px;
-  height: 200px;
-}
 .image:hover {
   transition: 0.5s;
   border-radius: 10px 10px 0px 0px;
 }
 .item .title {
   font-size: 1rem;
+  font-weight: bold;
   margin: 0;
 }
-
 .item .value {
   font-size: 1rem;
   font-weight: bold;
@@ -86,38 +93,33 @@ img:hover {
 }
 
 @media screen and (max-width: 360px) {
-  img {
-    width: 150px;
-  }
-  .image {
-    width: 150px;
-    height: 100px;
-  }
   .item {
-    margin: 5px;
+    width: 9rem;
+  }
+  img {
+    margin-top: 4%;
+    width: 90%;
   }
 }
 
 @media screen and (min-width: 360px) {
-  img {
-    width: 160px;
-  }
-  .image {
-    width: 160px;
-    height: 120px;
-  }
   .item {
-    margin: 5px;
+    width: 10rem;
+  }
+  img {
+    margin-top: 4%;
+    width: 90%;
   }
 }
 @media screen and (min-width: 1200px) {
+  .item{
+    width: 15rem;
+  }
   img {
-    width: 250px;
+    margin-top: 4%;
+    width: 90%;
   }
-  .image {
-    width: 250px;
-    height: 200px;
-  }
+
   .item {
     margin: 10px;
   }

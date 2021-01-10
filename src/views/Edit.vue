@@ -24,7 +24,7 @@
                 head-variant="dark"
                 striped
                 hover
-                :items="itemsProduct"
+                :items="dataProduct"
                 :fields="fieldsProduct"
               >
                 <template #cell(actions)="row">
@@ -61,7 +61,7 @@
                 head-variant="dark"
                 striped
                 hover
-                :items="itemsCategory"
+                :items="dataCategory"
                 :fields="fieldsCategory"
               >
                 <template #cell(actions)="row">
@@ -137,7 +137,7 @@
                     <b-form-select
                       id="input-category"
                       v-model="formAddProduct.id_category"
-                      :options="options"
+                      :options="listCategory"
                     >
                     </b-form-select> </b-col></b-row
                 ><br />
@@ -207,7 +207,7 @@
                     <b-form-select
                       id="input-category"
                       v-model="formEditProduct.id_category"
-                      :options="options"
+                      :options="listCategory"
                     >
                     </b-form-select> </b-col></b-row
                 ><br />
@@ -303,7 +303,8 @@
 <script>
 import HeaderItem from "../components/HeaderItem.vue";
 import SideNav from "../components/SideNav.vue";
-import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   components: { SideNav, HeaderItem },
   data() {
@@ -318,7 +319,7 @@ export default {
           sortable: true,
         },
         {
-          key: "category",
+          key: "categorys.name",
           label: "CATEGORY",
           sortable: true,
         },
@@ -337,7 +338,6 @@ export default {
         },
         { key: "actions", label: "ACTIONS" },
       ],
-      itemsProduct: [],
       itemsCategory: [],
       formEditProduct: {
         id: null,
@@ -359,113 +359,10 @@ export default {
         id: null,
         name: null,
       },
-      options: [],
     };
   },
   methods: {
-    getAllProduct() {
-      axios({
-        method: "GET",
-        url: process.env.VUE_APP_URL + "product",
-        headers: {
-          authtoken: this.dataToken.token,
-        },
-      })
-        .then((res) => {
-          this.itemsProduct = res.data.result;
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
-    },
-    getAllCategory() {
-      axios({
-        method: "GET",
-        url: process.env.VUE_APP_URL + "category",
-        headers: {
-          authtoken: this.dataToken.token,
-        },
-      })
-        .then((res) => {
-          this.options = [
-            {
-              value: null,
-              text: "Please Select Category",
-            },
-          ];
-          res.data.result.forEach((item) => {
-            this.options.push({
-              value: item.id,
-              text: item.name,
-            });
-          });
-          this.itemsCategory = res.data.result;
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
-    },
-    changeDataProduct() {
-      let formData = new FormData();
-      if (this.formEditProduct.image.length == undefined) {
-        formData.append("image", this.formEditProduct.image);
-      }
-      if (
-        this.formEditProduct.image.size > 3000000 &&
-        !this.formEditProduct.image
-      ) {
-        alert("Too Large, max size allowed is 3 MB!");
-      }
-      if (this.formEditProduct.name != "") {
-        formData.append("name", this.formEditProduct.name);
-      }
-      if (this.formEditProduct.price != "") {
-        formData.append("price", this.formEditProduct.price);
-      }
-      if (this.formEditProduct.id_category != null) {
-        formData.append("id_category", this.formEditProduct.id_category);
-      }
-      formData.append("id", this.formEditProduct.id);
-
-      axios({
-        method: "PUT",
-        url: process.env.VUE_APP_URL + "product",
-        headers: {
-          "Content-Type": "multipart/form-data",
-          authtoken: this.dataToken.token,
-        },
-        data: formData,
-      })
-        .then((res) => {
-          this.formEditProduct = [];
-          alert(res.data.description);
-          this.getAllProduct();
-          this.resetData();
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
-    },
-    changeDataCategory() {
-      axios({
-        method: "put",
-        url: process.env.VUE_APP_URL + "category",
-        headers: {
-          "Content-Type": "application/json",
-          authtoken: this.dataToken.token,
-        },
-        data: JSON.parse(JSON.stringify(this.formEditCategory)),
-      })
-        .then((res) => {
-          alert(res.statusText);
-          this.getAllCategory;
-          this.resetData();
-        })
-        .catch((err) => {
-          alert(err);
-          this.resetData();
-        });
-    },
+    ...mapActions(["getCategory", "getProduct"]),
     addDataProduct() {
       if (
         this.formAddProduct.name &&
@@ -475,96 +372,121 @@ export default {
       ) {
         if (this.formAddProduct.image.size > 3000000) {
           alert("Too Large, max size allowed is 3 MB!");
+          return;
         }
         let formData = new FormData();
         formData.append("image", this.formAddProduct.image);
         formData.append("name", this.formAddProduct.name);
         formData.append("price", this.formAddProduct.price);
         formData.append("id_category", this.formAddProduct.id_category);
-        axios({
-          method: "post",
-          url: process.env.VUE_APP_URL + "product",
-          headers: {
-            "Content-Type": "multipart/form-data",
-            authtoken: this.dataToken.token,
-          },
-          data: formData,
-        })
+
+        this.$store
+          .dispatch("addProduct", formData)
           .then((res) => {
-            alert(res.data.description);
-            this.getAllProduct();
+            alert(res.statusText);
+            this.getProduct();
             this.resetData();
           })
-          .catch((err) => {
-            alert(err.message);
+          .catch((e) => {
+            console.log(e);
             this.resetData();
           });
       } else {
         alert("Please fill out the entire form, and fill it out correctly");
       }
     },
+
     addDataCategory() {
       if (this.formAddCategory.name) {
-        axios({
-          method: "post",
-          url: process.env.VUE_APP_URL + "category",
-          headers: {
-            "Content-Type": "application/json",
-            authtoken: this.dataToken.token,
-          },
-          data: JSON.parse(JSON.stringify(this.formAddCategory)),
-        })
+        this.$store
+          .dispatch("addCategory", this.formAddCategory)
           .then((res) => {
-            alert(res.data.description);
-            this.getAllCategory();
+            alert(res.statusText);
+            this.getCategory();
             this.resetData();
           })
-          .catch((err) => {
-            alert(err.message);
+          .catch((e) => {
+            console.log(e);
             this.resetData();
           });
       } else {
         alert("Please fill out the entire form, and fill it out correctly");
       }
     },
-    delCategory(data) {
-      axios({
-        method: "DELETE",
-        url: process.env.VUE_APP_URL + "category/" + data.id,
-        headers: {
-          authtoken: this.dataToken.token,
-        },
-      })
+
+    changeDataProduct() {
+      let formData = new FormData();
+      if (this.formEditProduct.image.length !== 0) {
+        formData.append("image", this.formEditProduct.image);
+      }
+      if (
+        this.formEditProduct.image.size > 3000000 &&
+        !this.formEditProduct.image
+      ) {
+        alert("Too Large, max size allowed is 3 MB!");
+        return;
+      }
+      if (this.formEditProduct.name) {
+        formData.append("name", this.formEditProduct.name);
+      }
+      if (this.formEditProduct.price) {
+        formData.append("price", this.formEditProduct.price);
+      }
+      if (this.formEditProduct.id_category) {
+        formData.append("id_category", this.formEditProduct.id_category);
+      }
+      formData.append("id", this.formEditProduct.id);
+      this.$store
+        .dispatch("updateProduct", formData)
         .then((res) => {
-          this.getAllCategory();
           alert(res.statusText);
+          this.getProduct();
+          this.resetData();
         })
-        .catch((err) => {
-          alert(err);
+        .catch((e) => {
+          console.log(e);
+          this.resetData();
+        });
+    },
+
+    changeDataCategory() {
+      this.$store
+        .dispatch("updateCategory", this.formEditCategory)
+        .then((res) => {
+          alert(res.statusText);
+          this.getCategory();
+          this.resetData();
+        })
+        .catch((e) => {
+          console.log(e);
+          this.resetData();
+        });
+    },
+
+    delCategory(data) {
+      this.$store
+        .dispatch("deleteCategory", data.id)
+        .then((res) => {
+          alert(res.data.result);
+          this.getCategory();
+          this.resetData();
+        })
+        .catch((e) => {
+          console.log(e);
           this.resetData();
         });
     },
     delProduct(data) {
-      axios({
-        method: "DELETE",
-        url: process.env.VUE_APP_URL + "product/" + data.id,
-        headers: {
-          authtoken: this.dataToken.token,
-        },
-      })
+      this.$store
+        .dispatch("deleteProduct", data.id)
         .then((res) => {
-          this.getAllProduct();
           alert(res.statusText);
+          this.getProduct();
         })
-        .catch((err) => {
-          alert(err);
+        .catch((e) => {
+          console.log(e);
+          this.getProduct();
         });
-    },
-    logout() {
-      const check = this.$store.dispatch("delToken");
-      if (check) {
-        this.$router.push({ name: "Login" });
-      }
     },
     setDataProduct(item) {
       this.formEditProduct.id = item.id;
@@ -579,8 +501,19 @@ export default {
       this.$bvModal.show("modal-edit-category");
     },
     resetData() {
-      this.formEditProduct = [];
-      this.formAddProduct = [];
+      this.formEditProduct = {
+        id: null,
+        image: [],
+        name: null,
+        price: null,
+        id_category: null,
+      };
+      this.formAddProduct = {
+        image: [],
+        name: null,
+        price: null,
+        id_category: null,
+      };
       this.formAddCategory = [];
       this.formEditCategory = [];
       this.$bvModal.hide("modal-edit-product");
@@ -593,9 +526,7 @@ export default {
     },
   },
   computed: {
-    loggedIn() {
-      return this.$store.getters.loggedIn;
-    },
+    ...mapGetters(["dataProduct", "dataCategory", "listCategory"]),
     dataToken() {
       return this.$store.getters.dataToken;
     },
@@ -606,8 +537,8 @@ export default {
     } else {
       this.roleAdmin = false;
     }
-    this.getAllProduct();
-    this.getAllCategory();
+    this.getProduct();
+    this.getCategory();
   },
 };
 </script>

@@ -7,7 +7,7 @@
       <article class="login-form bg-dark">
         <div class="login-view" v-if="loginView === true">
           <h3 class="text-white mb-5">SIGN IN</h3>
-          <b-form class="m-3">
+          <b-form class="m-3" @submit="submitLogin" @submit.stop.prevent>
             <b-row>
               <b-col sm="2">
                 <fa-icon
@@ -19,9 +19,9 @@
               <b-col sm="10">
                 <b-form-input
                   placeholder="example@gmail.com"
+                  type="email"
                   autofocus
                   v-model="formLogin.email"
-                  v-on:keyup.enter="submitLogin"
                   required
                 >
                 </b-form-input>
@@ -36,19 +36,20 @@
                   placeholder="This is a secret"
                   v-model="formLogin.password"
                   type="password"
-                  v-on:keyup.enter="submitLogin"
                   required
+                  :state="validateLogin"
                 >
                 </b-form-input>
+                <b-form-invalid-feedback :state="validateLogin">
+                  Password must be at least 6 characters long!
+                </b-form-invalid-feedback>
               </b-col> </b-row
             ><br />
             <div class="form-group text-right">
               <a href="#" class="forget" value="Login">Forgot Password?</a>
             </div>
             <br />
-            <b-button variant="info" v-on:click="submitLogin" block
-              >Sign In</b-button
-            >
+            <b-button variant="info" type="submit" block>Sign In</b-button>
           </b-form>
           <p class="text-white">
             don't have account?
@@ -61,6 +62,8 @@
             >
           </p>
         </div>
+
+        <!-- REGISTER VIEW -->
         <div class="register-view" v-else>
           <h3 class="text-white mb-5">SIGN UP</h3>
           <b-form class="m-3">
@@ -74,11 +77,12 @@
               </b-col>
               <b-col sm="10">
                 <b-form-input
-                  id="input-name-category"
+                  id="input-name-register"
                   placeholder="example@gmail.com"
                   autofocus
                   v-model="formRegister.email"
                   v-on:keyup.enter="submitRegister"
+                  type="email"
                 >
                 </b-form-input>
               </b-col> </b-row
@@ -89,7 +93,7 @@
               </b-col>
               <b-col sm="10">
                 <b-form-input
-                  id="input-name-category"
+                  id="input-name-register"
                   placeholder="example"
                   v-model="formRegister.name"
                   v-on:keyup.enter="submitRegister"
@@ -103,13 +107,18 @@
               </b-col>
               <b-col sm="10">
                 <b-form-input
-                  id="input-name-category"
+                  id="input-password-register"
                   type="password"
                   placeholder="This is a secret"
                   v-model="formRegister.password"
                   v-on:keyup.enter="submitRegister"
+                  required
+                  :state="validateRegis"
                 >
                 </b-form-input>
+                <b-form-invalid-feedback :state="validateRegis">
+                  Password must be at least 6 characters long!
+                </b-form-invalid-feedback>
               </b-col> </b-row
             ><br />
             <div class="form-group text-right"></div>
@@ -159,17 +168,22 @@ export default {
         this.loginView = true;
       }
     },
+
     submitLogin() {
-      if (this.formLogin.email == null || this.formLogin.password == null) {
+      if (!this.formLogin.email || !this.formLogin.password) {
         alert("Please enter your email and password !");
       } else {
+        if (!this.validateLogin) {
+          this.resetInput();
+          return alert("Password must be at least 6 characters long!");
+        }
         this.$store
           .dispatch("getToken", this.formLogin)
-          .then((res) => {
-            alert(res.role);
+          .then(() => {
             this.$router.push({ name: "Home" });
           })
           .catch((err) => {
+            console.log(err);
             alert(err);
           });
       }
@@ -182,7 +196,10 @@ export default {
       ) {
         alert("Please enter your email and password !");
       } else {
-        console.log(this.formRegister);
+        if (!this.validateRegis) {
+          this.resetInput();
+          return alert("Password must be at least 6 characters long!");
+        }
         this.$store
           .dispatch("createAccount", this.formRegister)
           .then(() => {
@@ -204,6 +221,22 @@ export default {
       this.formRegister.name == null;
       this.formRegister.email == null;
       this.formRegister.password == null;
+    },
+  },
+  computed: {
+    validateLogin() {
+      if (this.formLogin.password) {
+        return this.formLogin.password.length >= 6;
+      } else {
+        return false;
+      }
+    },
+    validateRegis() {
+      if (this.formRegister.password) {
+        return this.formRegister.password.length > 6;
+      } else {
+        return false;
+      }
     },
   },
 };

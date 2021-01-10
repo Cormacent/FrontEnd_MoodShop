@@ -57,7 +57,7 @@
               class="shadow-sm"
               striped
               hover
-              :items="items"
+              :items="dataHistory"
               :fields="fields"
             ></b-table>
           </div>
@@ -69,8 +69,9 @@
 
 <script>
 import HeaderItem from "../components/HeaderItem.vue";
-import axios from "axios";
 import SideNav from "../components/SideNav.vue";
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "History",
   components: {
@@ -91,7 +92,7 @@ export default {
           sortable: true,
         },
         {
-          key: "date",
+          key: `createdAt`,
           label: "DATES",
           sortable: true,
         },
@@ -107,35 +108,17 @@ export default {
           variant: "success",
         },
       ],
-      items: [],
       roleAdmin: false,
     };
   },
   methods: {
-    getAllData() {
-      axios({
-        method: "GET",
-        url: process.env.VUE_APP_URL + "history",
-        headers: {
-          authtoken: this.dataToken.token,
-        },
-      })
-        .then((res) => {
-          this.items = res.data.result;
-        })
-        .catch((err) => {
-          alert(err.message);
-          this.logout();
-        });
-    },
+    ...mapActions(["getHistory"]),
     logout() {
-      const check = this.$store.dispatch("delToken");
-      if (check) {
-        this.$router.push({ name: "Login" });
-      }
+      this.$store.dispatch("delToken");
     },
   },
   computed: {
+    ...mapGetters(["dataHistory"]),
     loggedIn() {
       return this.$store.getters.loggedIn;
     },
@@ -144,12 +127,12 @@ export default {
     },
   },
   mounted() {
+    this.getHistory();
     if (this.$store.getters.dataToken.role === "admin") {
       this.roleAdmin = true;
     } else {
       this.roleAdmin = false;
     }
-    this.getAllData();
   },
 };
 </script>
