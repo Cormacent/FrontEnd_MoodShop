@@ -3,8 +3,8 @@ import router from "../../router";
 
 const auth = {
   state: {
-    token:   null,
-    role:   null,
+    token: null,
+    role: null,
     email: "",
     username: "",
   },
@@ -32,7 +32,7 @@ const auth = {
             if (!res.data.result[0].status) {
               reject(res.data.result[0].message);
             }
-            const data = res.data.result[0].result; 
+            const data = res.data.result[0].result;
             commit("getToken", data);
             resolve(true);
           })
@@ -41,15 +41,16 @@ const auth = {
           });
       });
     },
-    delToken({commit}) { 
+    delToken({ commit }) {
       commit("delToken");
-      commit("deleteProduct")
-      commit("emptyCategory")
-      commit("emptyCart")
-      
+      commit("deleteProduct");
+      commit("emptyCategory");
+      commit("emptyCart");
+      commit("emptyHistory");
+
       router.replace({ name: "Login" });
     },
-    createAccount(context, form) {
+    createAccount(_, form) {
       return new Promise((resolve, reject) => {
         Axios({
           method: "post",

@@ -133,6 +133,9 @@ const history = {
     getHistory(state, data) {
       state.history = data;
     },
+    emptyHistory(state) {
+      state.history = null;
+    },
   },
 };
 export default history;

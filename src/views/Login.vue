@@ -45,9 +45,9 @@
                 </b-form-invalid-feedback>
               </b-col> </b-row
             ><br />
-            <div class="form-group text-right">
+            <!-- <div class="form-group text-right">
               <a href="#" class="forget" value="Login">Forgot Password?</a>
-            </div>
+            </div> -->
             <br />
             <b-button variant="info" type="submit" block>Sign In</b-button>
           </b-form>
