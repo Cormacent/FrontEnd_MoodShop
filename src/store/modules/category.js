@@ -65,15 +65,12 @@ const category = {
           data: data,
         })
           .then((res) => {
-            console.log(res);
              resolve(res)
             return true
           })
           .catch((err) => {
             if (err.message === "Network Error") {
               reject(err.message);
-              console.log("from category1 store : ");
-              console.log(err);
               alert(err.message + "try to reconnect");
             } else if (err.message == "Request failed with status code 401") {
               alert(`Your token has expired!`);
@@ -100,8 +97,6 @@ const category = {
           })
           .catch((err) => {
             if (err.message === "Network Error") {
-              console.log("from category1 store : ");
-              console.log(err);
               reject(err.message);
               alert(err.message + "try to reconnect");
             } else if (err.message == "Request failed with status code 401") {

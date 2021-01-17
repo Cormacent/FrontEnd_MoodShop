@@ -83,13 +83,10 @@ const history = {
           data: data,
         })
           .then((res) => {
-            console.log(res).data;
             resolve(res);
           })
           .catch((err) => {
             if (err.message === "Network Error") {
-              console.log("from history1 store : ");
-              console.log(err);
               reject(err.message);
               alert(err.message + "try to reconnect");
             } else if (err.message == "Request failed with status code 401") {
@@ -115,8 +112,6 @@ const history = {
           })
           .catch((err) => {
             if (err.message === "Network Error") {
-              console.log("from history1 store : ");
-              console.log(err);
               reject(err.message);
               alert(err.message + "try to reconnect");
             } else if (err.message == "Request failed with status code 401") {
