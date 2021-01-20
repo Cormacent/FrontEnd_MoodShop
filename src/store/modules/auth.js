@@ -5,13 +5,17 @@ const auth = {
   state: {
     token: null,
     role: null,
-    email: "",
-    username: "",
+    email: null,
+    username: null,
+    id: null,
   },
   mutations: {
     getToken(state, data) {
       state.token = data.token;
       state.role = data.role;
+      state.email = data.email;
+      state.username = data.username;
+      state.id = data.id;
     },
     delToken(state) {
       (state.token = null), (state.role = null);
@@ -41,15 +45,17 @@ const auth = {
           });
       });
     },
+
     delToken({ commit }) {
       commit("delToken");
       commit("deleteProduct");
       commit("emptyCategory");
       commit("emptyCart");
-      commit("emptyHistory");
+      commit("emptyOrder");
 
       router.replace({ name: "Login" });
     },
+    
     createAccount(_, form) {
       return new Promise((resolve, reject) => {
         Axios({

@@ -4,8 +4,8 @@
       <fa-icon class="icon" :icon="['fas', 'utensils']" size="2x" />
     </router-link>
 
-    <router-link to="/history" class="router button">
-      <fa-icon class="icon" :icon="['fas', 'history']" size="2x" />
+    <router-link to="/order" class="router button text-info">
+      <fa-icon class="icon" :icon="['fas', 'clipboard-check']" size="2x" />
     </router-link>
     <router-link to="/edit" :class="roleAdmin ? 'router button' : 'hide'">
       <fa-icon

@@ -5,7 +5,7 @@ import VuexPersist from "vuex-persist";
 import auth from "./modules/auth";
 import product from "./modules/product";
 import category from "./modules/category";
-import history from "./modules/history";
+import order from "./modules/order";
 import cart from "./modules/cart";
 
 const vuexLocalStorage = new VuexPersist({
@@ -18,7 +18,7 @@ export default new Vuex.Store({
     auth,
     product,
     category,
-    history,
+    order,
     cart,
   },
   plugins: [vuexLocalStorage.plugin],

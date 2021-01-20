@@ -8,13 +8,14 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faShoppingCart,
   faUtensils,
-  faHistory,
   faPlusCircle,
   faTrash,
   faEdit,
   faEnvelope,
   faUser,
   faLock,
+  faClipboardCheck,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VModal from "vue-js-modal";
@@ -23,13 +24,14 @@ import store from "./store";
 library.add(
   faShoppingCart,
   faUtensils,
-  faHistory,
+  faClipboardCheck,
   faPlusCircle,
   faTrash,
   faEnvelope,
   faUser,
   faEdit,
-  faLock
+  faLock,
+  faEye
 );
 Vue.component("fa-icon", FontAwesomeIcon);
 Vue.use(VModal);
@@ -42,4 +44,3 @@ new Vue({
   store: store,
   render: (h) => h(App),
 }).$mount("#app");
-

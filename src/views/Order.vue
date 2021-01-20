@@ -1,9 +1,9 @@
 <template>
-  <div class="history">
+  <div class="order">
     <section class="main-section">
       <header-item
         class="header"
-        :text="'History'"
+        :text="'Order Information'"
         :searchicon="false"
         :filterEdit="false"
       />
@@ -57,9 +57,32 @@
               class="shadow-sm"
               striped
               hover
-              :items="dataHistory"
+              :items="dataOrder"
               :fields="fields"
+            >
+              <template #cell(actions)="row">
+                <b-button
+                  size="sm"
+                  @click="openOrderDetail(row.item.id)"
+                  class="mr-1"
+                  variant="primary"
+                >
+                  <fa-icon :icon="['fas', 'eye']" size="lg" />
+                </b-button> </template
             ></b-table>
+            <b-modal id="modal-open-detail" hide-footer>
+              <template #modal-title> Order Detail </template>
+              <b-form class="m-3">
+                <div
+                  class="modal-cart-align"
+                  v-for="item in dataOrderDetail"
+                  :key="item.id"
+                >
+                  <p>{{ item["products.name"] }} x {{ item.amount }}</p>
+                  <p>{{ item.price }} K</p>
+                </div>
+              </b-form>
+            </b-modal>
           </div>
         </div>
       </main>
@@ -73,7 +96,7 @@ import SideNav from "../components/SideNav.vue";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "History",
+  name: "Order",
   components: {
     HeaderItem,
     SideNav,
@@ -86,39 +109,38 @@ export default {
           label: "INVOICES",
           sortable: true,
         },
-        {
-          key: "cashier",
-          label: "CASHIER",
-          sortable: true,
-        },
-        {
-          key: `createdAt`,
-          label: "DATES",
-          sortable: true,
-        },
-        {
-          key: "name_product",
-          label: "ORDER",
+         {
+          key: "payment",
+          label: "PAYMENT",
           sortable: true,
         },
         {
           key: "amount",
-          label: "AMOUNT (Rp)",
+          label: "AMOUNT (K)",
           sortable: true,
-          variant: "success",
+          // variant: "success",
+        }, {
+          key: `createdAt`,
+          label: "DATES",
+          sortable: true,
         },
+        { key: "actions", label: "DETAIL" },
       ],
       roleAdmin: false,
     };
   },
   methods: {
-    ...mapActions(["getHistory"]),
+    ...mapActions(["getOrder", "getOrderDetail"]),
     logout() {
       this.$store.dispatch("delToken");
     },
+    openOrderDetail(id) {
+      this.getOrderDetail(id);
+      this.$bvModal.show("modal-open-detail");
+    },
   },
   computed: {
-    ...mapGetters(["dataHistory"]),
+    ...mapGetters(["dataOrder", "dataOrderDetail"]),
     loggedIn() {
       return this.$store.getters.loggedIn;
     },
@@ -127,7 +149,7 @@ export default {
     },
   },
   mounted() {
-    this.getHistory();
+    this.getOrder();
     if (this.$store.getters.dataToken.role === "admin") {
       this.roleAdmin = true;
     } else {
@@ -138,7 +160,7 @@ export default {
 </script>
 
 <style scoped>
-.history {
+.order {
   margin: 0;
   padding: 0;
   height: 100vh;
@@ -179,5 +201,10 @@ main {
 
 .header {
   z-index: 1;
+}
+.modal-cart-align {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 </style>

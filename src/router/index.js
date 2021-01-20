@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import History from "../views/History.vue";
+import Order from "../views/Order.vue";
 import Edit from "../views/Edit.vue";
 import Login from "../views/Login.vue";
 import store from "../store";
@@ -19,9 +19,9 @@ let router = new VueRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: "/history",
-      name: "History",
-      component: History,
+      path: "/order",
+      name: "Order",
+      component: Order,
       meta: { requiresAuth: true },
     },
     {

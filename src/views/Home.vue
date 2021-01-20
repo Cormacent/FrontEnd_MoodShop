@@ -29,20 +29,31 @@
                   :key="item.product.id"
                 >
                   <p>{{ item.product.name }} x {{ item.count }}</p>
-                  <p>Rp. {{ item.countPrice }}</p>
+                  <p>{{ item.countPrice }} K</p>
                 </div>
-                <div class="modal-cart-align">
-                  <p>Ppn 10%</p>
-                  <p>Rp. {{ ppn }}</p>
-                </div>
+                <b-row>
+                  <b-col sm="3"><p>Ppn 10%</p></b-col>
+                  <b-col sm="9" class="text-right"
+                    ><p>{{ ppn }} K</p></b-col
+                  >
+                </b-row>
+
+                <label class="mr-sm-4" for="input-Payment">Payment</label>
+                <b-form-select
+                  id="input-Payment"
+                  v-model="formOrder.payment"
+                  :options="paymentChoice"
+                  required
+                >
+                </b-form-select>
+                <br /><br />
                 <div class="text-right">
-                  <p>Total Rp. {{ total }}</p>
+                  <p>Total {{ total }} K</p>
                 </div>
                 <br />
                 <b-button class="btn-block" variant="success" type="submit"
                   >Order</b-button
                 >
-                <p class="text-center m-0"><b>OR</b></p>
                 <b-button type="reset" class="btn-block" variant="danger"
                   >Cancel</b-button
                 >
@@ -179,23 +190,33 @@ export default {
   data() {
     return {
       formOrder: {
-        amount: 0,
+        amount: null,
+        price: null,
+        payment: null,
         invoice: null,
-        cashier: "Zaki Ganteng",
-        name_product: null,
+        id_user: null,
       },
+      paymentChoice: [
+        {
+          value: null,
+          text: "Select Payment Method",
+        },
+        {
+          value: "cash",
+          text: "Cash",
+        },
+        {
+          value: "debit",
+          text: "Debit",
+        },
+      ],
       randomInvoice: "",
       roleAdmin: false,
     };
   },
   methods: {
     // FOR VUES ACTION
-    ...mapActions([
-      "getProduct",
-      "addCart",
-      "emptyCart",
-      "addHistory",
-    ]),
+    ...mapActions(["getProduct", "addCart", "emptyCart", "addOrder"]),
     cancelCart() {
       this.emptyCart();
     },
@@ -211,15 +232,23 @@ export default {
       });
     },
     modalOrder() {
-      this.formOrder.amount = this.total;
+      this.formOrder.amount = this.quantity;
       this.formOrder.invoice = this.randomInvoice;
-      let arrayValue = [];
-      this.allCart.forEach((value) => {
-        arrayValue.push(value.product.name);
-      });
-      this.formOrder.name_product = arrayValue.join(", ").toString();
-      this.addHistory(this.formOrder);
-      this.hideModal()
+      this.formOrder.price = this.quantity;
+      this.formOrder.id_user = this.dataToken.id;
+      let order = {
+        order: this.formOrder,
+        orderDetail: this.allCart,
+      };
+      this.$store
+        .dispatch("addOrder", order)
+        .then((res) => {
+          alert(res);
+        })
+        .catch((e) => {
+          alert(e);
+        });
+      this.hideModal();
     },
     hideModal() {
       this.$bvModal.hide("modal-add-cart");
@@ -236,14 +265,12 @@ export default {
       "quantity",
       "ppn",
       "total",
+      "dataToken",
     ]),
-    dataToken() {
-      return this.$store.getters.dataToken;
-    },
   },
   mounted() {
     this.getProduct();
-    if (this.$store.getters.dataToken.role === "admin") {
+    if (this.dataToken.role === "admin") {
       this.roleAdmin = true;
     } else {
       this.roleAdmin = false;
