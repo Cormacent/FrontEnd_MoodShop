@@ -13,10 +13,7 @@
         <div class="content-wrap col">
           <div class="container">
             <section v-if="flagShowTable" class="row">
-              <b-button
-                variant="success"
-                v-b-modal="'modal-add-product'"
-                class="m-3"
+              <b-button variant="success" @click="openAddProduct" class="m-3"
                 ><fa-icon class="icon" :icon="['fas', 'plus-circle']" /> Add New
                 Product</b-button
               >
@@ -30,7 +27,7 @@
                 <template #cell(actions)="row">
                   <b-button
                     size="sm"
-                    @click="setDataProduct(row.item)"
+                    @click="openEditProduct(row.item)"
                     class="mr-1"
                   >
                     <fa-icon :icon="['fas', 'edit']" size="lg" />
@@ -38,7 +35,7 @@
                   <b-button
                     size="sm"
                     class="btn-danger"
-                    @click="delProduct(row.item)"
+                    @click="openDeleteProduct(row.item)"
                   >
                     <fa-icon
                       :icon="['fas', 'trash']"
@@ -50,10 +47,7 @@
               </b-table>
             </section>
             <section v-else class="row">
-              <b-button
-                variant="success"
-                v-b-modal="'modal-add-category'"
-                class="m-3"
+              <b-button variant="success" @click="openAddCategory" class="m-3"
                 ><fa-icon class="icon" :icon="['fas', 'plus-circle']" /> Add
                 Category</b-button
               >
@@ -75,7 +69,7 @@
                   <b-button
                     size="sm"
                     class="btn-danger"
-                    @click="delCategory(row.item)"
+                    @click="openDelCategory(row.item)"
                   >
                     <fa-icon
                       :icon="['fas', 'trash']"
@@ -88,7 +82,11 @@
             </section>
             <b-modal id="modal-add-product" hide-footer>
               <template #modal-title> Add Item </template>
-              <b-form class="m-3">
+              <b-form
+                class="m-3"
+                @submit.prevent="addDataProduct"
+                @reset="resetData"
+              >
                 <b-row>
                   <b-col sm="3">
                     <label for="input-name">Name :</label>
@@ -96,7 +94,7 @@
                   <b-col sm="9">
                     <b-form-input
                       id="input-name"
-                      v-model="formAddProduct.name"
+                      v-model="formProduct.name"
                       placeholder="Product name.."
                     >
                     </b-form-input>
@@ -108,7 +106,7 @@
                   </b-col>
                   <b-col sm="9">
                     <b-form-file
-                      v-model="formAddProduct.image"
+                      v-model="formProduct.image"
                       placeholder="Choose a image or drop it here..."
                       drop-placeholder="Drop image here..."
                       accept="image/*"
@@ -123,7 +121,7 @@
                     <b-form-input
                       type="number"
                       id="input-price"
-                      v-model="formAddProduct.price"
+                      v-model="formProduct.price"
                       placeholder="Prices.."
                     >
                     </b-form-input>
@@ -136,23 +134,16 @@
                   <b-col sm="9">
                     <b-form-select
                       id="input-category"
-                      v-model="formAddProduct.id_category"
+                      v-model="formProduct.id_category"
                       :options="listCategory"
                     >
                     </b-form-select> </b-col></b-row
                 ><br />
-                <b-button
-                  class="btn-block"
-                  variant="success"
-                  @click="addDataProduct()"
+                <b-button class="btn-block" variant="success" type="submit"
                   >Add Product</b-button
                 >
                 <p class="text-center m-0"><b>OR</b></p>
-                <b-button
-                  type="reset"
-                  class="btn-block"
-                  variant="info"
-                  @click="resetData()"
+                <b-button type="reset" class="btn-block" variant="info"
                   >Cancel</b-button
                 >
               </b-form>
@@ -165,10 +156,7 @@
                     <label for="input-name">Name :</label>
                   </b-col>
                   <b-col sm="9">
-                    <b-form-input
-                      id="input-name"
-                      v-model="formEditProduct.name"
-                    >
+                    <b-form-input id="input-name" v-model="formProduct.name">
                     </b-form-input>
                   </b-col> </b-row
                 ><br />
@@ -178,7 +166,7 @@
                   </b-col>
                   <b-col sm="9">
                     <b-form-file
-                      v-model="formEditProduct.image"
+                      v-model="formProduct.image"
                       placeholder="Choose a image or drop it here..."
                       drop-placeholder="Drop image here..."
                       accept="image/*"
@@ -194,7 +182,7 @@
                     <b-form-input
                       id="input-price"
                       type="number"
-                      v-model="formEditProduct.price"
+                      v-model="formProduct.price"
                     >
                     </b-form-input>
                   </b-col> </b-row
@@ -206,7 +194,7 @@
                   <b-col sm="9">
                     <b-form-select
                       id="input-category"
-                      v-model="formEditProduct.id_category"
+                      v-model="formProduct.id_category"
                       :options="listCategory"
                     >
                     </b-form-select> </b-col></b-row
@@ -229,7 +217,11 @@
             </b-modal>
             <b-modal id="modal-add-category" hide-footer>
               <template #modal-title> Add Item </template>
-              <b-form class="m-3">
+              <b-form
+                class="m-3"
+                @submit.prevent="addDataCategory"
+                @reset="resetData"
+              >
                 <b-row>
                   <b-col sm="3">
                     <label for="input-name">Name :</label>
@@ -237,32 +229,29 @@
                   <b-col sm="9">
                     <b-form-input
                       id="input-name"
-                      v-model="formAddCategory.name"
+                      v-model="formCategory.name"
                       placeholder="Category name.."
                     >
                     </b-form-input>
                   </b-col> </b-row
                 ><br />
                 <br />
-                <b-button
-                  class="btn-block"
-                  variant="success"
-                  @click="addDataCategory()"
+                <b-button class="btn-block" variant="success" type="submit"
                   >Add Category</b-button
                 >
                 <p class="text-center m-0"><b>OR</b></p>
-                <b-button
-                  type="reset"
-                  class="btn-block"
-                  variant="info"
-                  @click="resetData()"
+                <b-button type="reset" class="btn-block" variant="info"
                   >Cancel</b-button
                 >
               </b-form>
             </b-modal>
             <b-modal id="modal-edit-category" hide-footer>
               <template #modal-title> Change Item </template>
-              <b-form class="m-3">
+              <b-form
+                class="m-3"
+                @submit.prevent="changeDataCategory"
+                @reset="resetData"
+              >
                 <b-row>
                   <b-col sm="3">
                     <label for="input-name">Name :</label>
@@ -270,28 +259,66 @@
                   <b-col sm="9">
                     <b-form-input
                       id="input-name-category"
-                      v-model="formEditCategory.name"
+                      v-model="formCategory.name"
                       placeholder="Category name.."
                     >
                     </b-form-input>
                   </b-col> </b-row
                 ><br />
                 <br />
-                <b-button
-                  class="btn-block"
-                  variant="success"
-                  @click="changeDataCategory()"
+                <b-button class="btn-block" variant="success" type="submit"
                   >Change</b-button
                 >
                 <p class="text-center m-0"><b>OR</b></p>
-                <b-button
-                  type="reset"
-                  class="btn-block"
-                  variant="info"
-                  @click="resetData()"
+                <b-button type="reset" class="btn-block" variant="info"
                   >Cancel</b-button
                 >
               </b-form>
+            </b-modal>
+            <b-modal id="modal-delete-category" hide-footer>
+              <template #modal-title> Delete Item </template>
+              <div class="d-block text-center">
+                <h5>
+                  Are you sure want to delete this data?
+                  <span class="text-info">{{ this.formCategory.name }}</span>
+                </h5>
+              </div>
+              <br /><br />
+              <b-button
+                class="btn-block"
+                variant="danger"
+                @click="delCategory()"
+                >Yeah</b-button
+              >
+              <p class="text-center m-0"><b>OR</b></p>
+              <b-button
+                type="reset"
+                class="btn-block"
+                variant="info"
+                @click="$bvModal.hide('modal-delete-category')"
+                >Nope</b-button
+              >
+            </b-modal>
+            <b-modal id="modal-delete-product" hide-footer>
+              <template #modal-title> Delete Item </template>
+              <div class="d-block text-center">
+                <h5>
+                  Are you sure want to delete this data?
+                  <span class="text-info">{{ this.formProduct.name }}</span>
+                </h5>
+              </div>
+              <br /><br />
+              <b-button class="btn-block" variant="danger" @click="delProduct()"
+                >Yeah</b-button
+              >
+              <p class="text-center m-0"><b>OR</b></p>
+              <b-button
+                type="reset"
+                class="btn-block"
+                variant="info"
+                @click="$bvModal.hide('modal-delete-product')"
+                >Nope</b-button
+              >
             </b-modal>
           </div>
         </div>
@@ -339,23 +366,14 @@ export default {
         { key: "actions", label: "ACTIONS" },
       ],
       itemsCategory: [],
-      formEditProduct: {
+      formProduct: {
         id: null,
         image: [],
         name: null,
         price: null,
         id_category: null,
       },
-      formAddProduct: {
-        image: [],
-        name: null,
-        price: null,
-        id_category: null,
-      },
-      formAddCategory: {
-        name: null,
-      },
-      formEditCategory: {
+      formCategory: {
         id: null,
         name: null,
       },
@@ -365,20 +383,20 @@ export default {
     ...mapActions(["getCategory", "getProduct"]),
     addDataProduct() {
       if (
-        this.formAddProduct.name &&
-        this.formAddProduct.price &&
-        this.formAddProduct.id_category &&
-        this.formAddProduct.image
+        this.formProduct.name &&
+        this.formProduct.price &&
+        this.formProduct.id_category &&
+        this.formProduct.image
       ) {
-        if (this.formAddProduct.image.size > 3000000) {
+        if (this.formProduct.image.size > 3000000) {
           alert("Too Large, max size allowed is 3 MB!");
           return;
         }
         let formData = new FormData();
-        formData.append("image", this.formAddProduct.image);
-        formData.append("name", this.formAddProduct.name);
-        formData.append("price", this.formAddProduct.price);
-        formData.append("id_category", this.formAddProduct.id_category);
+        formData.append("image", this.formProduct.image);
+        formData.append("name", this.formProduct.name);
+        formData.append("price", this.formProduct.price);
+        formData.append("id_category", this.formProduct.id_category);
 
         this.$store
           .dispatch("addProduct", formData)
@@ -396,10 +414,38 @@ export default {
       }
     },
 
+    openAddProduct() {
+      this.resetData();
+      this.$bvModal.show("modal-add-product");
+    },
+
+    openEditProduct(item) {
+      this.formProduct.id = item.id;
+      // this.formProduct.image = item.image;
+      this.formProduct.name = item.name;
+      this.formProduct.price = item.price;
+      this.formProduct.id_category = item.id_category;
+      this.$bvModal.show("modal-edit-product");
+    },
+    openDeleteProduct(item) {
+      this.formProduct.id = item.id;
+      this.formProduct.name = item.name;
+      this.$bvModal.show("modal-delete-product");
+    },
+
+    openAddCategory() {
+      this.formCategory = {
+        id: null,
+        name: null,
+      };
+      this.$bvModal.show("modal-add-category");
+    },
+
     addDataCategory() {
-      if (this.formAddCategory.name) {
+      if (this.formCategory.name) {
+        delete this.formCategory.id;
         this.$store
-          .dispatch("addCategory", this.formAddCategory)
+          .dispatch("addCategory", this.formCategory)
           .then((res) => {
             alert(res.statusText);
             this.getCategory();
@@ -413,29 +459,30 @@ export default {
         alert("Please fill out the entire form, and fill it out correctly");
       }
     },
+    openDelCategory(data) {
+      this.formCategory = data;
+      this.$bvModal.show("modal-delete-category");
+    },
 
     changeDataProduct() {
       let formData = new FormData();
-      if (this.formEditProduct.image.length !== 0) {
-        formData.append("image", this.formEditProduct.image);
+      if (this.formProduct.image.length !== 0) {
+        formData.append("image", this.formProduct.image);
       }
-      if (
-        this.formEditProduct.image.size > 3000000 &&
-        !this.formEditProduct.image
-      ) {
+      if (this.formProduct.image.size > 3000000 && !this.formProduct.image) {
         alert("Too Large, max size allowed is 3 MB!");
         return;
       }
-      if (this.formEditProduct.name) {
-        formData.append("name", this.formEditProduct.name);
+      if (this.formProduct.name) {
+        formData.append("name", this.formProduct.name);
       }
-      if (this.formEditProduct.price) {
-        formData.append("price", this.formEditProduct.price);
+      if (this.formProduct.price) {
+        formData.append("price", this.formProduct.price);
       }
-      if (this.formEditProduct.id_category) {
-        formData.append("id_category", this.formEditProduct.id_category);
+      if (this.formProduct.id_category) {
+        formData.append("id_category", this.formProduct.id_category);
       }
-      formData.append("id", this.formEditProduct.id);
+      formData.append("id", this.formProduct.id);
       this.$store
         .dispatch("updateProduct", formData)
         .then((res) => {
@@ -451,7 +498,7 @@ export default {
 
     changeDataCategory() {
       this.$store
-        .dispatch("updateCategory", this.formEditCategory)
+        .dispatch("updateCategory", this.id)
         .then((res) => {
           alert(res.statusText);
           this.getCategory();
@@ -463,9 +510,9 @@ export default {
         });
     },
 
-    delCategory(data) {
+    delCategory() {
       this.$store
-        .dispatch("deleteCategory", data.id)
+        .dispatch("deleteCategory", this.formCategory.id)
         .then((res) => {
           alert(res.data.result);
           this.getCategory();
@@ -476,50 +523,49 @@ export default {
           this.resetData();
         });
     },
-    delProduct(data) {
+    delProduct() {
       this.$store
-        .dispatch("deleteProduct", data.id)
+        .dispatch("deleteProduct", this.formProduct.id)
         .then((res) => {
           alert(res.statusText);
           this.getProduct();
+          this.resetData();
         })
         .catch((e) => {
           console.log(e);
+          this.resetData();
           this.getProduct();
         });
     },
-    setDataProduct(item) {
-      this.formEditProduct.id = item.id;
-      // this.formEditProduct.image = item.image;
-      this.formEditProduct.name = item.name;
-      this.formEditProduct.price = item.price;
-      this.formEditProduct.id_category = item.id_category;
-      this.$bvModal.show("modal-edit-product");
-    },
+
     setDataCategory(item) {
-      this.formEditCategory = item;
+      this.formCategory = item;
       this.$bvModal.show("modal-edit-category");
     },
     resetData() {
-      this.formEditProduct = {
+      this.formProduct = {
         id: null,
         image: [],
         name: null,
         price: null,
         id_category: null,
       };
-      this.formAddProduct = {
+      this.formProduct = {
         image: [],
         name: null,
         price: null,
         id_category: null,
       };
-      this.formAddCategory = [];
-      this.formEditCategory = [];
+      this.formCategory = {
+        id: null,
+        name: null,
+      };
       this.$bvModal.hide("modal-edit-product");
       this.$bvModal.hide("modal-add-product");
       this.$bvModal.hide("modal-edit-category");
       this.$bvModal.hide("modal-add-category");
+      this.$bvModal.hide("modal-delete-category");
+      this.$bvModal.hide("modal-delete-product");
     },
     changeShow(value) {
       this.flagShowTable = value;

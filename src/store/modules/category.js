@@ -62,11 +62,10 @@ const category = {
             "Content-Type": "application/json",
             authtoken: store.getters.dataToken.token,
           },
-          data: data,
+          data: JSON.parse(JSON.stringify(data)),
         })
           .then((res) => {
              resolve(res)
-            return true
           })
           .catch((err) => {
             if (err.message === "Network Error") {
@@ -109,6 +108,8 @@ const category = {
       });
     },
     deleteCategory(_, data) {
+      console.log("sini");
+      console.log(data);
       return new Promise((resolve, reject) => {
         Axios({
           method: "DELETE",

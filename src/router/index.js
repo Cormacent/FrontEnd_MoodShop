@@ -53,6 +53,12 @@ router.beforeEach((to, from, next) => {
       next({
         name: "Login",
       });
+    } else if (
+      store.getters.loggedIn &&
+      store.getters.dataToken.role == "customer" &&
+      to.matched.some((record) => record.name == "Edit")
+    ) {
+      next(router.replace(from));
     } else {
       next();
     }
@@ -60,6 +66,7 @@ router.beforeEach((to, from, next) => {
     store.getters.loggedIn &&
     to.matched.some((record) => record.name == "Login")
   ) {
+    console.log("sii");
     next(router.replace(from));
   } else {
     next();

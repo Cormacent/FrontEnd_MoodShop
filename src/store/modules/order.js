@@ -1,11 +1,10 @@
 import Axios from "axios";
 import store from "../index";
 
-//   data dari action kirim ke mutation kemudian disimpan dalam state,
-// dan dapat digunakan melalui getters
 const order = {
   state: {
     order: null,
+    orderUser: null,
     orderDetail: null,
   },
   getters: {
@@ -15,8 +14,35 @@ const order = {
         state.order[key].createdAt = date.toLocaleDateString("en-GB", {
           timeZone: "UTC",
         });
+        if (state.order[key].status == 1) {
+          state.order[key].status = "unpaid";
+        } else if (state.order[key].status == 2) {
+          state.order[key].status = "process";
+        } else if (state.order[key].status == 3) {
+          state.order[key].status = "ready";
+        } else if (state.order[key].status == 4) {
+          state.order[key].status = "done";
+        }
       }
       return state.order;
+    },
+    dataOrderUser: (state) => {
+      for (const key in state.orderUser) {
+        let date = new Date(state.orderUser[key].createdAt);
+        state.orderUser[key].createdAt = date.toLocaleDateString("en-GB", {
+          timeZone: "UTC",
+        });
+        if (state.orderUser[key].status == 1) {
+          state.orderUser[key].status = "unpaid";
+        } else if (state.orderUser[key].status == 2) {
+          state.orderUser[key].status = "process";
+        } else if (state.orderUser[key].status == 3) {
+          state.orderUser[key].status = "ready";
+        } else if (state.orderUser[key].status == 4) {
+          state.orderUser[key].status = "done";
+        }
+      }
+      return state.orderUser;
     },
     dataOrderDetail: (state) => {
       return state.orderDetail;
@@ -48,6 +74,29 @@ const order = {
     getOrder({ commit }) {
       Axios({
         method: "GET",
+        url: process.env.VUE_APP_URL + "order",
+        headers: {
+          authtoken: store.getters.dataToken.token,
+        },
+      })
+        .then((res) => {
+          commit("getOrder", res.data.result);
+        })
+        .catch((err) => {
+          if (err.message === "Network Error") {
+            alert(err.message);
+          } else if (err.message == "Request failed with status code 401") {
+            alert(`Your token has expired!`);
+            store.dispatch("delToken");
+          } else {
+            console.log(err);
+          }
+        });
+    },
+
+    getOrderUser({ commit }) {
+      Axios({
+        method: "GET",
         url:
           process.env.VUE_APP_URL +
           "order/user?id_user=" +
@@ -57,7 +106,7 @@ const order = {
         },
       })
         .then((res) => {
-          commit("getOrder", res.data.result);
+          commit("getOrderUser", res.data.result);
         })
         .catch((err) => {
           if (err.message === "Network Error") {
@@ -137,10 +186,10 @@ const order = {
           method: "PUT",
           url: process.env.VUE_APP_URL + "order",
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
             authtoken: store.getters.dataToken.token,
           },
-          data: data,
+          data: JSON.parse(JSON.stringify(data)),
         })
           .then((res) => {
             resolve(res);
@@ -187,6 +236,9 @@ const order = {
   mutations: {
     getOrder(state, data) {
       state.order = data;
+    },
+    getOrderUser(state, data) {
+      state.orderUser = data;
     },
     getOrderDetail(state, data) {
       state.orderDetail = data;

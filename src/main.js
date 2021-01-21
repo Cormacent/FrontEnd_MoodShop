@@ -16,6 +16,7 @@ import {
   faLock,
   faClipboardCheck,
   faEye,
+  faSync,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VModal from "vue-js-modal";
@@ -31,7 +32,8 @@ library.add(
   faUser,
   faEdit,
   faLock,
-  faEye
+  faEye,
+  faSync
 );
 Vue.component("fa-icon", FontAwesomeIcon);
 Vue.use(VModal);

@@ -59,6 +59,33 @@
               hover
               :items="dataOrder"
               :fields="fields"
+              v-if="dataToken.role == 'admin'"
+            >
+              <template #cell(actions)="row">
+                <b-button
+                  size="sm"
+                  @click="openOrderDetail(row.item.id)"
+                  class="mr-1"
+                  variant="primary"
+                >
+                  <fa-icon :icon="['fas', 'eye']" size="lg" />
+                </b-button>
+                <b-button
+                  size="sm"
+                  @click="openOrderStatus(row.item)"
+                  class="mr-1"
+                  variant="success"
+                >
+                  <fa-icon :icon="['fas', 'sync']" size="lg" />
+                </b-button> </template
+            ></b-table>
+            <b-table
+              class="shadow-sm"
+              striped
+              hover
+              :items="dataOrderUser"
+              :fields="fields"
+              v-if="dataToken.role == 'customer'"
             >
               <template #cell(actions)="row">
                 <b-button
@@ -72,15 +99,34 @@
             ></b-table>
             <b-modal id="modal-open-detail" hide-footer>
               <template #modal-title> Order Detail </template>
-              <b-form class="m-3">
-                <div
-                  class="modal-cart-align"
-                  v-for="item in dataOrderDetail"
-                  :key="item.id"
+              <div
+                class="modal-cart-align m-3"
+                v-for="item in dataOrderDetail"
+                :key="item.id"
+              >
+                <p>{{ item["products.name"] }} x {{ item.amount }}</p>
+                <p>{{ item.price }} K</p>
+              </div>
+            </b-modal>
+            <b-modal id="modal-open-status" hide-footer>
+              <template #modal-title> Order Detail </template>
+              <b-form
+                class="m-3"
+                @submit="changeStatusOrder"
+                @submit.stop.prevent
+              >
+                <label class="mr-sm-4" for="input-Status">Status</label>
+                <b-form-select
+                  id="input-Status"
+                  v-model="formStatus.status"
+                  :options="statusChoice"
+                  required
                 >
-                  <p>{{ item["products.name"] }} x {{ item.amount }}</p>
-                  <p>{{ item.price }} K</p>
-                </div>
+                </b-form-select
+                ><br /><br />
+                <b-button class="btn-block" variant="success" type="submit"
+                  >Order</b-button
+                >
               </b-form>
             </b-modal>
           </div>
@@ -103,13 +149,41 @@ export default {
   },
   data() {
     return {
+      statusChoice: [
+        {
+          value: null,
+          text: "Select Payment Method",
+        },
+        {
+          value: "1",
+          text: "Unpaid",
+        },
+        {
+          value: "2",
+          text: "Process",
+        },
+        {
+          value: "3",
+          text: "Ready",
+        },
+        {
+          value: "4",
+          text: "Done",
+        },
+      ],
       fields: [
         {
           key: "invoice",
           label: "INVOICES",
           sortable: true,
         },
-         {
+        {
+          key: "status",
+          label: "STATUS",
+          sortable: true,
+          variant: "info",
+        },
+        {
           key: "payment",
           label: "PAYMENT",
           sortable: true,
@@ -118,29 +192,66 @@ export default {
           key: "amount",
           label: "AMOUNT (K)",
           sortable: true,
-          // variant: "success",
-        }, {
+        },
+        {
           key: `createdAt`,
           label: "DATES",
           sortable: true,
         },
-        { key: "actions", label: "DETAIL" },
+        { key: "actions", label: "ACTIONS" },
       ],
+      formStatus: {
+        id: null,
+        status: null,
+      },
       roleAdmin: false,
     };
   },
   methods: {
-    ...mapActions(["getOrder", "getOrderDetail"]),
+    ...mapActions([
+      "getOrder",
+      "getOrderDetail",
+      "getOrderUser",
+      "updateOrder",
+    ]),
     logout() {
       this.$store.dispatch("delToken");
+    },
+    changeStatusOrder() {
+      this.updateOrder(this.formStatus)
+        .then((res) => {
+          alert(res.statusText);
+          this.formStatus = {
+            id: null,
+            status: null,
+          };
+          this.$bvModal.hide("modal-open-status");
+          this.getOrder();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     openOrderDetail(id) {
       this.getOrderDetail(id);
       this.$bvModal.show("modal-open-detail");
     },
+    openOrderStatus(data) {
+      this.formStatus.id = data.id;
+      if (data.status == "unpaid") {
+        this.formStatus.status = 1;
+      } else if (data.status == "process") {
+        this.formStatus.status = 2;
+      } else if (data.status == "ready") {
+        this.formStatus.status = 3;
+      } else if (data.status == "done") {
+        this.formStatus.status = 4;
+      }
+      this.$bvModal.show("modal-open-status");
+    },
   },
   computed: {
-    ...mapGetters(["dataOrder", "dataOrderDetail"]),
+    ...mapGetters(["dataOrder", "dataOrderDetail", "dataOrderUser"]),
     loggedIn() {
       return this.$store.getters.loggedIn;
     },
@@ -150,6 +261,7 @@ export default {
   },
   mounted() {
     this.getOrder();
+    this.getOrderUser();
     if (this.$store.getters.dataToken.role === "admin") {
       this.roleAdmin = true;
     } else {

@@ -7,7 +7,7 @@
       <article class="login-form bg-dark">
         <div class="login-view" v-if="loginView === true">
           <h3 class="text-white mb-5">SIGN IN</h3>
-          <b-form class="m-3" @submit="submitLogin" @submit.stop.prevent>
+          <b-form class="m-3" @submit.prevent="submitLogin">
             <b-row>
               <b-col sm="2">
                 <fa-icon
@@ -66,7 +66,7 @@
         <!-- REGISTER VIEW -->
         <div class="register-view" v-else>
           <h3 class="text-white mb-5">SIGN UP</h3>
-          <b-form class="m-3">
+          <b-form class="m-3" @submit.prevent="submitRegister">
             <b-row>
               <b-col sm="2">
                 <fa-icon
@@ -80,6 +80,7 @@
                   id="input-name-register"
                   placeholder="example@gmail.com"
                   autofocus
+                  required
                   v-model="formRegister.email"
                   v-on:keyup.enter="submitRegister"
                   type="email"
@@ -97,6 +98,7 @@
                   placeholder="example"
                   v-model="formRegister.name"
                   v-on:keyup.enter="submitRegister"
+                  required
                 >
                 </b-form-input>
               </b-col> </b-row
@@ -123,9 +125,7 @@
             ><br />
             <div class="form-group text-right"></div>
             <br />
-            <b-button variant="info" v-on:click="submitRegister" block
-              >Sign Up</b-button
-            >
+            <b-button variant="info" type="submit" block>Sign Up</b-button>
           </b-form>
           <p class="text-white">
             already have account?
