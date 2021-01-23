@@ -15,6 +15,9 @@ This is an e-commerce website application that contains food and soft drinks lik
 5. [Vuex-presist](https://www.npmjs.com/package/vuex-persist)
 ```
 
+## To use full function
+please clone api for backend moodshop and see readme.md in there
+
 ## Project setup
 ```
 yarn install
