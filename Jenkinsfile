@@ -5,7 +5,7 @@ pipeline {
 
     parameters {
         string(name: 'DOCKERHUB', defaultValue: 'halohalo', description: 'testteest')
-        booleanParams(name: 'RUNTEST', defaultValue: 'true', description: 'testteest')
+        booleanParam(name: 'RUNTEST', defaultValue: 'true', description: 'testteest')
         choice(name: 'DEPLOY', choices: ['yes','no'], description: 'testteest')
     }
 
