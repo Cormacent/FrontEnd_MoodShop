@@ -4,8 +4,8 @@ pipeline {
     agent any 
 
     parameters {
-        string(name: 'DOCKERHUB', defaultvalue: 'halohalo', description: 'testteest')
-        booleanParams(name: 'RUNTEST', defaultvalue: 'true', description: 'testteest')
+        string(name: 'DOCKERHUB', defaultValue: 'halohalo', description: 'testteest')
+        booleanParams(name: 'RUNTEST', defaultValue: 'true', description: 'testteest')
         choise(name: 'DEPLOY', choices: ['yes','no'], description: 'testteest')
     }
 
