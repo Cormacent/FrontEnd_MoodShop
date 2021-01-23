@@ -26,7 +26,7 @@ pipeline {
                  }
             }
         }
-        stage('build docker image') { 
+        stage('test docker image') { 
              steps {
                  script {
                      builder.inside {
