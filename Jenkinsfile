@@ -38,7 +38,7 @@ pipeline {
         stage('Push Image to Registries') { 
             steps {
                 script {
-                    build.push()
+                    builder.push()
                 }
             }
         }
