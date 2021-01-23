@@ -42,5 +42,25 @@ pipeline {
                 }
             }
         }
+        stage("Deploy to other server"){
+            steps{
+                script {
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'developer',
+                                verbose: false,
+                                transfers: [
+                                    sshTransfer(
+                                        execCommand: "docker pull ${image_name}; docker kill frontendmoodshop; docker run -d --rm --name frontendmoodshop -p 8080:80 ${image_name}",
+                                        execTimeout: 1200000
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
+            }
+        }
     }
 }
