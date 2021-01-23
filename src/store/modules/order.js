@@ -5,7 +5,7 @@ const order = {
   state: {
     order: null,
     orderUser: null,
-    orderDetail: null,
+    orderItem: null,
   },
   getters: {
     dataOrder: (state) => {
@@ -44,21 +44,21 @@ const order = {
       }
       return state.orderUser;
     },
-    dataOrderDetail: (state) => {
-      return state.orderDetail;
+    dataOrderItem: (state) => {
+      return state.orderItem;
     },
   },
   actions: {
-    getOrderDetail({ commit }, id_order) {
+    getOrderItem({ commit }, id_order) {
       Axios({
         method: "GET",
-        url: process.env.VUE_APP_URL + "orderdetail/order?id_order=" + id_order,
+        url: process.env.VUE_APP_URL + "orderitem/order?id_order=" + id_order,
         headers: {
           authtoken: store.getters.dataToken.token,
         },
       })
         .then((res) => {
-          commit("getOrderDetail", res.data.result);
+          commit("getOrderItem", res.data.result);
         })
         .catch((e) => {
           if (e.message === "Network Error") {
@@ -132,7 +132,7 @@ const order = {
           data: data.order,
         })
           .then((resOrder) => {
-            data.orderDetail.forEach((val) => {
+            data.orderItem.forEach((val) => {
               val.id_order = resOrder.data.result.id;
               let datadetail = {
                 id_order: resOrder.data.result.id,
@@ -142,7 +142,7 @@ const order = {
               };
               Axios({
                 method: "POST",
-                url: process.env.VUE_APP_URL + "orderdetail",
+                url: process.env.VUE_APP_URL + "orderitem",
                 headers: {
                   "Content-Type": "application/json",
                   authtoken: store.getters.dataToken.token,
@@ -240,8 +240,8 @@ const order = {
     getOrderUser(state, data) {
       state.orderUser = data;
     },
-    getOrderDetail(state, data) {
-      state.orderDetail = data;
+    getOrderItem(state, data) {
+      state.orderItem = data;
     },
 
     emptyOrder(state) {

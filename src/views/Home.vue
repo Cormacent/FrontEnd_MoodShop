@@ -238,7 +238,7 @@ export default {
       this.formOrder.id_user = this.dataToken.id;
       let order = {
         order: this.formOrder,
-        orderDetail: this.allCart,
+        orderItem: this.allCart,
       };
       this.$store
         .dispatch("addOrder", order)

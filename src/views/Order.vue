@@ -64,7 +64,7 @@
               <template #cell(actions)="row">
                 <b-button
                   size="sm"
-                  @click="openOrderDetail(row.item.id)"
+                  @click="openOrderItem(row.item.id)"
                   class="mr-1"
                   variant="primary"
                 >
@@ -90,7 +90,7 @@
               <template #cell(actions)="row">
                 <b-button
                   size="sm"
-                  @click="openOrderDetail(row.item.id)"
+                  @click="openOrderItem(row.item.id)"
                   class="mr-1"
                   variant="primary"
                 >
@@ -101,7 +101,7 @@
               <template #modal-title> Order Detail </template>
               <div
                 class="modal-cart-align m-3"
-                v-for="item in dataOrderDetail"
+                v-for="item in dataOrderItem"
                 :key="item.id"
               >
                 <p>{{ item["products.name"] }} x {{ item.amount }}</p>
@@ -210,7 +210,7 @@ export default {
   methods: {
     ...mapActions([
       "getOrder",
-      "getOrderDetail",
+      "getOrderItem",
       "getOrderUser",
       "updateOrder",
     ]),
@@ -232,8 +232,8 @@ export default {
           console.log(e);
         });
     },
-    openOrderDetail(id) {
-      this.getOrderDetail(id);
+    openOrderItem(id) {
+      this.getOrderItem(id);
       this.$bvModal.show("modal-open-detail");
     },
     openOrderStatus(data) {
@@ -251,7 +251,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["dataOrder", "dataOrderDetail", "dataOrderUser"]),
+    ...mapGetters(["dataOrder", "dataOrderItem", "dataOrderUser"]),
     loggedIn() {
       return this.$store.getters.loggedIn;
     },
