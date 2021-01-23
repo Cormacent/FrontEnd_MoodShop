@@ -1,4 +1,6 @@
-
+def dockerhub = "zakimaulana/frontendmoodshop"
+def image_name = "${dockerhub}:${BRANCH_NAME}"
+def builder
 
 pipeline {
     agent any 
@@ -10,29 +12,34 @@ pipeline {
     }
 
     stages {
-        stage('Build') { 
+        stage('Install Dependencies') { 
             steps {
-                echo "hello from build"
-            }
-        }
-        stage('Test') { 
-            when {
-                expression {
-                    params.RUNTEST
+                nodejs('node14') {
+                     sh 'yarn install'
                 }
             }
-            steps {
-                echo "hello from Test"
+        }
+        stage('build docker image') { 
+             steps {
+                 script {
+                     builder = docker.build(image_name)
+                 }
             }
         }
-        stage('Deploy') { 
-            when {
-                expression {
-                    params.DEPLOY == 'yes'
-                }
+        stage('build docker image') { 
+             steps {
+                 script {
+                     builder.inside {
+                         sh 'echo passed'
+                     }
+                 }
             }
+        }
+        stage('Push Image to Registries') { 
             steps {
-                echo "hello from Deploy"
+                script {
+                    build.push()
+                }
             }
         }
     }
