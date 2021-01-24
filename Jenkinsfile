@@ -24,9 +24,6 @@ pipeline {
                             sh 'docker images'
                             sh 'echo VUE_APP_URL=http://35.174.207.150/api/ > .env.local'
                             sh 'echo VUE_APP_API=35.174.207.150/api/ > .env.local'
-                            sh 'ls -lah'
-                            sh 'docker ps -a'
-                            sh 'docker system prune --all --force --volumes'
                         }
                     }
                 }
