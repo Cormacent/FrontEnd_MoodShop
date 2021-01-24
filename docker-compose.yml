@@ -64,35 +64,35 @@ services:
         reservations:
           cpus: '0.25'
           memory: 20M
-  nginx:
-    image: zakimaulana/nginxmoodshop:master
-    # build:
-    #   context: ./nginx
-    #   dockerfile: Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - moodshopnet
-    depends_on:
-      - frontend
-    deploy:
-      resources:
-        limits:
-          cpus: '0.20'
-          memory: 50M
-        reservations:
-          cpus: '0.1'
-          memory: 20M
-    volumes:
-      - ./shared-nginx:/shared-files
+  # nginx:
+  #   image: zakimaulana/nginxmoodshop:master
+  #   # build:
+  #   #   context: ./nginx
+  #   #   dockerfile: Dockerfile
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   networks:
+  #     - moodshopnet
+  #   depends_on:
+  #     - frontend
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.20'
+  #         memory: 50M
+  #       reservations:
+  #         cpus: '0.1'
+  #         memory: 20M
+  #   volumes:
+  #     - ./shared-nginx:/shared-files
   frontend:
     image: zakimaulana/frontendmoodshop:master
     # build:
     #   context: ./frontend
     #   dockerfile: Dockerfile
     ports:
-      - "8999:8080"
+      - "80:80"
     env_file:
       - ./frontend/.env.local
 networks:
