@@ -21,8 +21,9 @@ pipeline {
                     steps {
                         nodejs('node14yarn') {
                             sh 'yarn install'
-                            sh 'echo VUE_APP_URL=http://35.174.207.150/api/ > .env.local'
-                            sh 'echo VUE_APP_API=35.174.207.150/api/ > .env.local'
+                            sh 'echo VUE_APP_URL=http://35.174.207.150/api/ > .env'
+                            sh 'echo VUE_APP_API=35.174.207.150/api/ > .env'
+                            sh 'cat .env.local'
                             sh 'ls -la'
                         }
                     }
@@ -36,8 +37,8 @@ pipeline {
                     steps {
                         nodejs('node14yarn') {
                             sh 'yarn install'
-                            sh 'echo VUE_APP_URL=http://34.228.145.89/api/ > .env.local'
-                            sh 'echo VUE_APP_API=34.228.145.89/api/ > .env.local'
+                            sh 'echo VUE_APP_URL=http://34.228.145.89/api/ > .env'
+                            sh 'echo VUE_APP_API=34.228.145.89/api/ > .env'
                             sh 'ls -lah'
                         }
                     }
