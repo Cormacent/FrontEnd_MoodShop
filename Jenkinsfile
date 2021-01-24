@@ -11,9 +11,44 @@ pipeline {
 
     stages {
         stage('Install Dependencies') { 
-            steps {
-                nodejs('node14yarn') {
-                     sh 'yarn install'
+            parallel {
+                stage("DEV"){
+                    when {
+                        expression {
+                            params.DEPLOY == "DEV"
+                        }
+                    }
+                    steps {
+                        nodejs('node14yarn') {
+                            sh 'yarn install'
+                            sh 'ls -lah'
+                            sh '''
+                                cat << EOF > file1.txt
+                                VUE_APP_URL=http://35.174.207.150/api/
+                                VUE_APP_API=35.174.207.150/api/ 
+                                EOF
+                            '''
+                        }
+                    }
+                }
+                stage("PROD"){
+                    when {
+                        expression {
+                            params.DEPLOY == "PROD"
+                        }
+                    }
+                    steps {
+                        nodejs('node14yarn') {
+                            sh 'yarn install'
+                            sh 'ls -lah'
+                            sh '''
+                                cat << EOF > file1.txt
+                                VUE_APP_URL=http://34.228.145.89/api/
+                                VUE_APP_API=34.228.145.89/api/ 
+                                EOF
+                            '''
+                        }
+                    }
                 }
             }
         }
