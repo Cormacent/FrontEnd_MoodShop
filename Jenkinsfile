@@ -21,13 +21,15 @@ pipeline {
                     steps {
                         nodejs('node14yarn') {
                             sh 'yarn install'
-                            sh 'ls -lah'
                             sh '''
                                 cat << EOF > file1.txt
                                 VUE_APP_URL=http://35.174.207.150/api/
                                 VUE_APP_API=35.174.207.150/api/ 
                                 EOF
                             '''
+                            sh 'ls -lah'
+                            sh 'docker ps'
+                            sh 'docker ps -a'
                         }
                     }
                 }
