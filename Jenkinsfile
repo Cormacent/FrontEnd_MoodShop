@@ -21,7 +21,6 @@ pipeline {
                     steps {
                         nodejs('node14yarn') {
                             sh 'yarn install'
-                            sh 'docker images'
                             sh 'echo VUE_APP_URL=http://35.174.207.150/api/ > .env.local'
                             sh 'echo VUE_APP_API=35.174.207.150/api/ > .env.local'
                         }
@@ -84,8 +83,7 @@ pipeline {
                                         verbose: false,
                                         transfers: [
                                             sshTransfer(
-                                                sourceFiles: 'docker-compose.yml',
-                                                execCommand: "docker pull ${image_name}; cd /home/production/app; docker-compose down; docker-compose up -d",
+                                                execCommand: "docker pull ${image_name};",
                                                 execTimeout: 1200000
                                             )
                                         ]
@@ -110,8 +108,7 @@ pipeline {
                                         verbose: false,
                                         transfers: [
                                             sshTransfer(
-                                                sourceFiles: 'docker-compose.yml',
-                                                execCommand: "docker pull ${image_name}; cd /home/production/app; docker-compose down; docker-compose up -d",
+                                                execCommand: "docker pull ${image_name};",
                                                 execTimeout: 1200000
                                             )
                                         ]
