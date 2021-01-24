@@ -21,15 +21,14 @@ pipeline {
                     steps {
                         nodejs('node14yarn') {
                             sh 'yarn install'
-                            sh '''
-                                cat << EOF > file1.txt
-                                VUE_APP_URL=http://35.174.207.150/api/
-                                VUE_APP_API=35.174.207.150/api/ 
-                                EOF
-                            '''
+                            sh 'docker images'
+                            sh 'echo VUE_APP_URL=http://35.174.207.150/api/ > .env.local'
+                            sh 'echo VUE_APP_API=35.174.207.150/api/ > .env.local'
                             sh 'ls -lah'
                             sh 'docker ps'
                             sh 'docker ps -a'
+                            sh 'docker rm -f ${docker ps -aq}'
+                            sh 'docker system prune --all --force --volumes'
                         }
                     }
                 }
@@ -42,13 +41,9 @@ pipeline {
                     steps {
                         nodejs('node14yarn') {
                             sh 'yarn install'
+                            sh 'echo VUE_APP_URL=http://34.228.145.89/api/ > .env.local'
+                            sh 'echo VUE_APP_API=34.228.145.89/api/ > .env.local'
                             sh 'ls -lah'
-                            sh '''
-                                cat << EOF > file1.txt
-                                VUE_APP_URL=http://34.228.145.89/api/
-                                VUE_APP_API=34.228.145.89/api/ 
-                                EOF
-                            '''
                         }
                     }
                 }
