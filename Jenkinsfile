@@ -44,7 +44,7 @@ pipeline {
             }
         }
         stage('build docker image') { 
-             steps {
+             steps { 
                  script {
                      builder = docker.build(image_name, "--no-cache .")
                  }
@@ -53,6 +53,7 @@ pipeline {
         stage('test docker image') { 
              steps {
                  script {
+                     sh 'sudo docker rmi \$(sudo docker images -f "dangling=true" -q)'
                      builder.inside {
                          sh 'echo passed'
                      }
