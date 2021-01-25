@@ -53,7 +53,7 @@ pipeline {
         stage('test docker image') { 
              steps {
                  script {
-                     sh 'sudo docker rmi \$(sudo docker images -f "dangling=true" -q)'
+                     sh 'docker rmi \$(docker images -f "dangling=true" -q)'
                      builder.inside {
                          sh 'echo passed'
                      }
