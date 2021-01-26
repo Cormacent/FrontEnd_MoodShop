@@ -88,7 +88,10 @@ pipeline {
                                         transfers: [
                                             sshTransfer(
                                                 sourceFiles: 'docker-compose.yml',
-                                                execCommand: "docker pull ${image_name}; docker rmi \$(docker images -f 'dangling=true' -q);  cd /home/developer/app; docker-compose down; docker-compose up -d",
+                                                execCommand: "docker pull ${image_name};\
+                                                            cd /home/developer/app; docker-compose down;\
+                                                            docker rmi \$(docker images -f 'dangling=true' -q);\
+                                                            docker-compose up -d",
                                                 execTimeout: 1200000
                                             )
                                         ]
@@ -114,7 +117,11 @@ pipeline {
                                         transfers: [
                                             sshTransfer(
                                                 sourceFiles: 'docker-compose.yml',
-                                                execCommand: "docker pull ${image_name}; docker rmi \$(docker images -f 'dangling=true' -q);  cd /home/production/app; docker-compose down; docker-compose up -d",
+                                                execCommand: "docker pull ${image_name};\
+                                                            cd /home/production/app;\
+                                                            docker-compose down;\
+                                                            docker rmi \$(docker images -f 'dangling=true' -q);\
+                                                            docker-compose up -d",
                                                 execTimeout: 1200000
                                             )
                                         ]
