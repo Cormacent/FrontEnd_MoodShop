@@ -1,0 +1,60 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5060:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - moodshopnet
+    environment:
+      - POSTGRES_PASSWORD=c0b4d1b4c4
+      - POSTGRES_USER=cormac
+      - POSTGRES_DB=moodshop
+    mem_limit: 100M
+    cpus: "0.25"
+  api:
+    image: zakimaulana/apimoodshop:master
+    ports:
+      - "8089-8091:8089"
+    env_file:
+      - ./api/.env
+    networks:
+      - moodshopnet
+    depends_on:
+      - postgres
+    deploy:
+      mode: replicated
+      replicas: 3
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+    volumes:
+      - ./shared-api:/shared-files
+  redis:
+    image: redis:5.0.10-alpine
+    environment:
+      - REDIS_PASSWORD=c0b4d1b4c4
+    ports:
+      - "6969:6379"
+    networks:
+      - moodshopnet
+    depends_on:
+      - api
+    restart: always
+    mem_limit: 50M
+    cpus: "0.50"
+  frontend:
+    image: zakimaulana/frontendmoodshop:master
+    ports:
+      - "80:80"
+    env_file:
+      - ./frontend/.env.local
+networks:
+  moodshopnet:
+    driver: bridge

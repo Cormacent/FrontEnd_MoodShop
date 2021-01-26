@@ -22,8 +22,6 @@ pipeline {
                         nodejs('node14yarn') {
                             sh 'yarn install'
                             sh 'printf "VUE_APP_URL=http://35.174.207.150/api/\nVUE_APP_API=35.174.207.150/api/" > .env'
-                            sh 'cat .env'
-                            sh 'ls -la'
                         }
                     }
                 }
@@ -37,7 +35,6 @@ pipeline {
                         nodejs('node14yarn') {
                             sh 'yarn install'
                             sh 'printf "VUE_APP_URL=http://34.228.145.89/api/\nVUE_APP_API=34.228.145.89/api/" > .env'
-                            sh 'ls -lah'
                         }
                     }
                 }
@@ -45,19 +42,25 @@ pipeline {
         }
         stage('build docker image') { 
              steps { 
-                 script {
-                     builder = docker.build(image_name, "--no-cache .")
-                 }
+                script {
+                    builder = docker.build(image_name, "--no-cache .")
+                }
+            }
+        }
+        stage("remove unused docker image"){
+            steps{
+                script {
+                    sh 'docker rmi \$(docker images -f "dangling=true" -q)'
+                }
             }
         }
         stage('test docker image') { 
-             steps {
-                 script {
-                     sh 'docker rmi \$(docker images -f "dangling=true" -q)'
-                     builder.inside {
-                         sh 'echo passed'
-                     }
-                 }
+            steps {
+                script {
+                    builder.inside {
+                        sh 'echo passed'
+                    }
+                }
             }
         }
         stage('Push Image to Registries') { 
@@ -84,7 +87,8 @@ pipeline {
                                         verbose: false,
                                         transfers: [
                                             sshTransfer(
-                                                execCommand: "docker pull ${image_name};",
+                                                sourceFiles: 'docker-compose.yml',
+                                                execCommand: "docker pull ${image_name}; docker rmi \$(docker images -f 'dangling=true' -q);  cd /home/developer/app; docker-compose down; docker-compose up -d",
                                                 execTimeout: 1200000
                                             )
                                         ]
@@ -109,7 +113,8 @@ pipeline {
                                         verbose: false,
                                         transfers: [
                                             sshTransfer(
-                                                execCommand: "docker pull ${image_name};",
+                                                sourceFiles: 'docker-compose.yml',
+                                                execCommand: "docker pull ${image_name}; docker rmi \$(docker images -f 'dangling=true' -q);  cd /home/production/app; docker-compose down; docker-compose up -d",
                                                 execTimeout: 1200000
                                             )
                                         ]
