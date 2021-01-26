@@ -84,7 +84,7 @@ pipeline {
                                 publishers: [
                                     sshPublisherDesc(
                                         configName: 'development',
-                                        verbose: false,
+                                        verbose: true,
                                         transfers: [
                                             sshTransfer(
                                                 sourceFiles: 'docker-compose.yml',
@@ -113,7 +113,7 @@ pipeline {
                                 publishers: [
                                     sshPublisherDesc(
                                         configName: 'production',
-                                        verbose: false,
+                                        verbose: true,
                                         transfers: [
                                             sshTransfer(
                                                 sourceFiles: 'docker-compose.yml',
