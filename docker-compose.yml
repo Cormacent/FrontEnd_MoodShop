@@ -55,6 +55,10 @@ services:
       - "80:80"
     env_file:
       - ./frontend/.env.local
+    networks:
+      - moodshopnet
+    depends_on: 
+      - api
 networks:
   moodshopnet:
     driver: bridge
