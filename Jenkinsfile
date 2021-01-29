@@ -21,7 +21,7 @@ pipeline {
                     steps {
                         nodejs('node14yarn') {
                             sh 'yarn install'
-                            sh 'printf "VUE_APP_URL=http://35.174.207.150/api/\nVUE_APP_API=35.174.207.150/api/" > .env'
+                            sh 'printf "VUE_APP_URL=http://3.90.20.177:30123/api/\nVUE_APP_API=3.90.20.177:30123/api/" > .env'
                             sh 'yarn build'
                         }
                     }
