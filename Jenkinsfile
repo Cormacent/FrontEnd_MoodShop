@@ -57,8 +57,8 @@ pipeline {
                                     sshTransfer(
                                         sourceFiles: 'moodshop.yml',
                                         execCommand: "cd /home/k8s/app;\
-                                                    echo 'c0b4d1b4c4' | sudo -S kubectl rollout restart deployment deployment.apps/frontend\
-                                                    echo 'c0b4d1b4c4' | sudo -S kubectl rollout restart deployment deployment.apps/api",
+                                                    echo 'c0b4d1b4c4' | sudo -S kubectl rollout restart deployment deployment.apps/frontend -n=production\
+                                                    echo 'c0b4d1b4c4' | sudo -S kubectl rollout restart deployment deployment.apps/api -n=production",
                                         execTimeout: 1200000
                                     )
                                 ]
