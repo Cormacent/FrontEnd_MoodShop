@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend-vue
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend-vue
+        tier: frontend
+    spec:
+      containers:
+        - name: frontendmoodshop
+          image: zakimaulana/frontendmoodshop:master
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 3
+
+---
+#SERVICES for moodshop frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend-vue
+    tier: frontend
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30122
+      protocol: TCP
+      name: frontendport
+
+--- 
+# DEPLOYMENT FOR BACKEND
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api-vue
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: api-vue
+        tier: backend
+    spec:
+      containers:
+        - name: apimoodshop
+          image: zakimaulana/apimoodshop:master
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 8089
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8089
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8089
+            initialDelaySeconds: 5
+            periodSeconds: 3
+---
+#SERVICE FOR API
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  selector:
+    app: api-vue
+    tier: backend
+  type: NodePort
+  ports:
+    - port: 8081
+      targetPort: 8089
+      nodePort: 30123
+      protocol: TCP
+      name: backendport
+---
+# INGRESS

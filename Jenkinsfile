@@ -5,39 +5,13 @@ def builder
 pipeline {
     agent any 
 
-    parameters {
-        choice(name: 'DEPLOY', choices: ['DEV','PROD'])
-    }
-
     stages {
         stage('Install Dependencies') { 
-            parallel {
-                stage("DEV"){
-                    when {
-                        expression {
-                            params.DEPLOY == "DEV"
-                        }
-                    }
-                    steps {
-                        nodejs('node14yarn') {
-                            sh 'yarn install'
-                            sh 'printf "VUE_APP_URL=http://3.90.20.177:30123/api/\nVUE_APP_API=3.90.20.177:30123/api/" > .env'
-                            sh 'yarn build'
-                        }
-                    }
-                }
-                stage("PROD"){
-                    when {
-                        expression {
-                            params.DEPLOY == "PROD"
-                        }
-                    }
-                    steps {
-                        nodejs('node14yarn') {
-                            sh 'yarn install'
-                            sh 'printf "VUE_APP_URL=http://34.228.145.89/api/\nVUE_APP_API=34.228.145.89/api/" > .env'
-                        }
-                    }
+            steps {
+                nodejs('node14yarn') {
+                    sh 'yarn install'
+                    sh 'printf "VUE_APP_URL=http://3.90.20.177:30123/api/\nVUE_APP_API=3.90.20.177:30123/api/" > .env'
+                    sh 'yarn build'
                 }
             }
         }
@@ -71,66 +45,24 @@ pipeline {
                 }
             }
         }
-        stage("Deploy to other server"){
-            parallel {
-                stage("DEV"){
-                    when {
-                        expression {
-                            params.DEPLOY == "DEV"
-                        }
-                    }
-                    steps{
-                        script {
-                            sshPublisher(
-                                publishers: [
-                                    sshPublisherDesc(
-                                        configName: 'development',
-                                        verbose: true,
-                                        transfers: [
-                                            sshTransfer(
-                                                sourceFiles: 'docker-compose.yml',
-                                                execCommand: "docker pull ${image_name};\
-                                                            cd /home/developer/app; docker-compose down;\
-                                                            docker rmi -f \$(docker images -f 'dangling=true' -q);\
-                                                            docker-compose up -d",
-                                                execTimeout: 1200000
-                                            )
-                                        ]
+        stage("Deploy to k8s"){
+            steps{
+                script {
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'k8s-ctrl',
+                                verbose: true,
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'moodshop.yml',
+                                        execCommand: "echo "c0b4d1b4c4" | sudo -S kubectl apply -f moodshop.yml",
+                                        execTimeout: 1200000
                                     )
                                 ]
                             )
-                        }
-                    }
-                }
-                stage("PROD"){
-                    when {
-                        expression {
-                            params.DEPLOY == "PROD"
-                        }
-                    }
-                    steps{
-                        script {
-                            sshPublisher(
-                                publishers: [
-                                    sshPublisherDesc(
-                                        configName: 'production',
-                                        verbose: true,
-                                        transfers: [
-                                            sshTransfer(
-                                                sourceFiles: 'docker-compose.yml',
-                                                execCommand: "docker pull ${image_name};\
-                                                            cd /home/production/app;\
-                                                            docker-compose down;\
-                                                            docker rmi -f \$(docker images -f 'dangling=true' -q);\
-                                                            docker-compose up -d",
-                                                execTimeout: 1200000
-                                            )
-                                        ]
-                                    )
-                                ]
-                            )
-                        }
-                    }
+                        ]
+                    )
                 }
             }
         }
