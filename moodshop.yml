@@ -3,6 +3,29 @@ kind: Namespace
 metadata:
   name: production
 ---
+apiVersion: v1
+data:
+  MODE: DEV
+  DB_HOST: 54.227.229.162
+  DB_USER: cormac
+  DB_PASS: c0b4d1b4c4
+  DB_DATABASE: moodshop
+  DB_PORT: 5432
+  REDIS_HOST: 54.227.229.162
+  REDIS_PORT: 6379
+  REDIS_PASS: c0b4d1b4c4
+  JWT_KEYS: rahasiakuterbongkarsudah
+  CLOUD_KEY: 676327326565441
+  CLOUD_SECRET: A4FazLHEsU2TArM4oWcjVxSJZM4
+  CLOUD_NAME: devops-engineer
+  CLOUD_ENV: cloudinary://676327326565441:A4FazLHEsU2TArM4oWcjVxSJZM4@devops-engineer
+
+kind: ConfigMap
+metadata:
+  name: env-backend
+  namespace: production
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -81,6 +104,9 @@ spec:
           imagePullPolicy: "Always"
           ports:
             - containerPort: 8089
+          envFrom:
+          - configMapRef:
+              name: env-backend
           livenessProbe:
             httpGet:
               path: /health
