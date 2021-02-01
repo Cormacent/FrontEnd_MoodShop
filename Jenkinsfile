@@ -57,8 +57,8 @@ pipeline {
                                     sshTransfer(
                                         sourceFiles: 'moodshop.yml',
                                         execCommand: "cd /home/k8s/app;\
-                                                     echo 'c0b4d1b4c4' | sudo -S su\
-                                                     echo kubectl apply -f moodshop.yml --record --namespace=production",
+                                                    echo 'c0b4d1b4c4' | sudo -S kubectl delete namespace production\
+                                                    echo 'c0b4d1b4c4' | sudo -S kubectl apply -f moodshop.yml --record",
                                         execTimeout: 1200000
                                     )
                                 ]
