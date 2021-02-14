@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Install Dependencies') { 
             steps {
-                nodejs('node14yarn') {
+                nodejs('yarn14') {
                     sh 'yarn install'
                     sh 'printf "VUE_APP_URL=http://3.90.20.177:30123/api/\nVUE_APP_API=3.90.20.177:30123/api/" > .env'
                     sh 'yarn build'
