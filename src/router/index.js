@@ -66,7 +66,6 @@ router.beforeEach((to, from, next) => {
     store.getters.loggedIn &&
     to.matched.some((record) => record.name == "Login")
   ) {
-    console.log("sii");
     next(router.replace(from));
   } else {
     next();

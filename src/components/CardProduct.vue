@@ -81,6 +81,9 @@ img:hover {
   transition: 0.5s;
   border-radius: 10px 10px 0px 0px;
 }
+.image {
+  height: 160px;
+}
 .item .title {
   font-size: 1rem;
   font-weight: bold;

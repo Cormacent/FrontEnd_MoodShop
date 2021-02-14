@@ -315,7 +315,7 @@ main {
   z-index: 1;
 }
 .modal-cart-align {
-  width: 100%;
+  width: 90%;
   display: flex;
   justify-content: space-between;
 }

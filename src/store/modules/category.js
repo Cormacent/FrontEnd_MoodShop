@@ -108,8 +108,6 @@ const category = {
       });
     },
     deleteCategory(_, data) {
-      console.log("sini");
-      console.log(data);
       return new Promise((resolve, reject) => {
         Axios({
           method: "DELETE",

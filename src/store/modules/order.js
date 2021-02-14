@@ -149,8 +149,8 @@ const order = {
                 },
                 data: datadetail,
               })
-                .then((res) => {
-                  console.log(res);
+                .then(() => {
+                  alert("Success")
                 })
                 .catch((e) => {
                   if (e.message === "Network Error") {
