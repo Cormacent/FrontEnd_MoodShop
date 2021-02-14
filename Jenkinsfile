@@ -45,6 +45,7 @@ pipeline {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-creds-zaki') {
                         builder.push()
                     }
+                    sh 'docker rmi $image_name'
                 }
             }
         }
@@ -54,7 +55,7 @@ pipeline {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: 'moodshopdev',
+                                configName: 'moodshopeducate',
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
