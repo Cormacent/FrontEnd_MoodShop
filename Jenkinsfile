@@ -22,13 +22,13 @@ pipeline {
                 }
             }
         }
-        stage("remove unused docker image"){
-            steps{
-                script {
-                    sh 'docker rmi \$(docker images -f "dangling=true" -q)'
-                }
-            }
-        }
+        // stage("remove unused docker image"){
+        //     steps{
+        //         script {
+        //             sh 'docker rmi \$(docker images -f "dangling=true" -q)'
+        //         }
+        //     }
+        // }
         stage('test docker image') { 
             steps {
                 script {
@@ -45,6 +45,13 @@ pipeline {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-creds-zaki') {
                         builder.push()
                     }
+                    sh 'docker rmi $image_name'
+                }
+            }
+        }
+        stage("remove unused docker image"){
+            steps{
+                script {
                     sh 'docker rmi $image_name'
                 }
             }
