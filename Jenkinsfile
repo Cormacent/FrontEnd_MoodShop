@@ -52,6 +52,7 @@ pipeline {
             steps{
                 script {
                     sh 'docker rmi zakimaulana/frontendmoodshop:master'
+                    sh 'docker rmi \$(docker images -f "dangling=true" -q)'
                 }
             }
         }
