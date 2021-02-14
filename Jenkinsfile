@@ -45,14 +45,13 @@ pipeline {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-creds-zaki') {
                         builder.push()
                     }
-                    sh 'docker rmi $image_name'
                 }
             }
         }
         stage("remove unused docker image"){
             steps{
                 script {
-                    sh 'docker rmi $image_name'
+                    sh 'docker rmi ${image_name}'
                 }
             }
         }
