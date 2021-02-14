@@ -46,19 +46,19 @@ pipeline {
                 }
             }
         }
-        stage("Deploy to k8s"){
+        stage("Deploy to deployment server"){
             steps{
                 script {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: 'k8s-ctrl',
+                                configName: 'moodshopdev',
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        sourceFiles: 'moodshop.yml',
-                                        execCommand: "cd /home/k8s/app;\
-                                                    echo 'c0b4d1b4c4' | sudo -S kubectl rollout restart deployment -n=production",
+                                        sourceFiles: 'docker-compose.yml',
+                                        execCommand: "cd /home/zaki/app;\
+                                                    echo docker-compose up -d",
                                         execTimeout: 1200000
                                     )
                                 ]
