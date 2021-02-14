@@ -51,7 +51,7 @@ pipeline {
         stage("remove unused docker image"){
             steps{
                 script {
-                    sh 'docker rmi ${image_name}'
+                    sh 'docker rmi zakimaulana/frontendmoodshop:master'
                 }
             }
         }
