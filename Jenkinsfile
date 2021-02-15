@@ -61,16 +61,10 @@ pipeline {
                                     sshTransfer(
                                         sourceFiles: 'docker-compose.yml',
                                         execCommand: "cd /home/zaki/app;\
-                                                    echo ./init-letsencrypt.sh;",
+                                                    echo docker-compose down;\
+                                                    echo docker-compose up -d",
                                         execTimeout: 1200000
                                     )
-                                    // sshTransfer(
-                                    //     sourceFiles: 'docker-compose.yml',
-                                    //     execCommand: "cd /home/zaki/app;\
-                                    //                 echo docker-compose stop;\
-                                    //                 echo docker-compose up -d",
-                                    //     execTimeout: 1200000
-                                    // )
                                 ]
                             )
                         ]
