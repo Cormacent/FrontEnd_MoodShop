@@ -53,6 +53,7 @@ pipeline {
                 script {
                     sh 'docker rmi zakimaulana/frontendmoodshop:master'
                     sh 'docker rmi registry.hub.docker.com/zakimaulana/frontendmoodshop:master'
+                    sh 'docker rmi \$(docker images -f "dangling=true" -q)'
                 }
             }
         }
@@ -68,10 +69,16 @@ pipeline {
                                     sshTransfer(
                                         sourceFiles: 'docker-compose.yml',
                                         execCommand: "cd /home/zaki/app;\
-                                                    echo docker-compose stop;\
-                                                    echo docker-compose up -d",
+                                                    echo ./init-letsencrypt.sh",
                                         execTimeout: 1200000
                                     )
+                                    // sshTransfer(
+                                    //     sourceFiles: 'docker-compose.yml',
+                                    //     execCommand: "cd /home/zaki/app;\
+                                    //                 echo docker-compose stop;\
+                                    //                 echo docker-compose up -d",
+                                    //     execTimeout: 1200000
+                                    // )
                                 ]
                             )
                         ]
