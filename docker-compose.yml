@@ -53,8 +53,8 @@ services:
       - ./frontend/.env.local
     networks:
       - moodshopnet
-    # depends_on: 
-    #   - api
+    depends_on: 
+      - api
     volumes:
       - ./dist:/public_html
       - ./dhparam:/etc/nginx/dhparam
