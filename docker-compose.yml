@@ -50,13 +50,26 @@ services:
   frontend:
     image: zakimaulana/frontendmoodshop:master
     ports:
-      - "80:80"
+      - 80:80
+      - 443:443
     env_file:
       - ./frontend/.env.local
     networks:
       - moodshopnet
     depends_on: 
       - api
+    volumes:
+      - ./dist:/public_html
+      - ./dhparam:/etc/nginx/dhparam
+      - ./certbot/conf/:/etc/nginx/ssl/
+      - ./certbot/data:/usr/share/nginx/html/letsencrypt
+  certbot:
+     image: certbot/certbot:latest
+     command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email zakimaulana08@gmail.com --agree-tos --no-eff-email -d moodshop.online
+     volumes:
+       - ./certbot/conf/:/etc/letsencrypt
+       - ./certbot/logs/:/var/log/letsencrypt
+       - ./certbot/data:/usr/share/nginx/html/letsencrypt  
 networks:
   moodshopnet:
     driver: bridge
