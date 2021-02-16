@@ -56,7 +56,7 @@ services:
     depends_on: 
       - api
     volumes:
-      - ./dist:/public_html
+      # - ./dist:/public_html
       - ./dhparam:/etc/nginx/dhparam
       - ./certbot/conf/:/etc/nginx/ssl/
       - ./certbot/data:/usr/share/nginx/html/letsencrypt
