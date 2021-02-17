@@ -55,13 +55,13 @@ pipeline {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: 'moodshopeducate',
+                                configName: 'moodshopdev',
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: "docker-compose.yml",
                                         execCommand: "cd /home/zaki/app;\
-                                                    docker-compose up -d --force-recreate;",
+                                                    docker-compose up -d;",
                                         execTimeout: 1200000
                                     )
                                 ]
