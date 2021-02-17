@@ -51,7 +51,7 @@ services:
     image: zakimaulana/frontendmoodshop:master
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8588:80"
     env_file:
       - ./frontend/.env.local
     networks:
