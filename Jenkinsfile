@@ -46,7 +46,6 @@ pipeline {
                 script {
                     sh 'docker rmi zakimaulana/frontendmoodshop:master'
                     sh 'docker rmi registry.hub.docker.com/zakimaulana/frontendmoodshop:master'
-                    sh 'docker rmi -f \$(docker images -f "dangling=true" -q)'
                 }
             }
         }
