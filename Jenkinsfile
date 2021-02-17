@@ -59,7 +59,7 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        sourceFiles: ['docker-compose.yml','/dist'],
+                                        sourceFiles: "docker-compose.yml, dist, Dockerfile",
                                         // execCommand: "cd /home/zaki/app;\
                                         //             docker-compose up -d;",
                                         execTimeout: 1200000
