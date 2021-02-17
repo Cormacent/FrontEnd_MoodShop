@@ -61,7 +61,7 @@ pipeline {
                                     sshTransfer(
                                         sourceFiles: "docker-compose.yml",
                                         execCommand: "cd /home/zaki/app;\
-                                                    docker-compose up -d;",
+                                                    docker-compose up -d --force-recreate;",
                                         execTimeout: 1200000
                                     )
                                 ]
