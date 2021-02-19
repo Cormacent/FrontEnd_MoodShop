@@ -1,17 +1,17 @@
 version: "3.8"
 services:
-  postgres:
-    image: postgres:latest
-    ports:
-      - "5060:5432"
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-    networks:
-      - moodshopnet
-    env_file: 
-      - ./postgres/.env
-    mem_limit: 100M
-    cpus: "0.25"
+  # postgres:
+  #   image: postgres:latest
+  #   ports:
+  #     - "5060:5432"
+  #   volumes:
+  #     - ./pgdata:/var/lib/postgresql/data
+  #   networks:
+  #     - moodshopnet
+  #   env_file: 
+  #     - ./postgres/.env
+  #   mem_limit: 100M
+  #   cpus: "0.25"
   api:
     image: zakimaulana/apimoodshop:master
     ports:
@@ -20,8 +20,8 @@ services:
       - ./api/.env
     networks:
       - moodshopnet
-    depends_on:
-      - postgres
+    # depends_on:
+    #   - postgres
     deploy:
       mode: replicated
       replicas: 2
