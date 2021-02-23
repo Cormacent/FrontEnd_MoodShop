@@ -35,8 +35,6 @@ services:
     restart: unless-stopped
     ports:
       - "8588:80"
-    env_file:
-      - ./frontend/.env
     networks:
       - moodshopnet
     depends_on: 
