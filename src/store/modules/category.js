@@ -93,6 +93,7 @@ const category = {
         })
           .then((res) => {
             resolve(res);
+            console.log(res);
           })
           .catch((err) => {
             if (err.message === "Network Error") {

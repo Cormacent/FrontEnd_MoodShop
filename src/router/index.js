@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Order from "../views/Order.vue";
 import Edit from "../views/Edit.vue";
 import Login from "../views/Login.vue";
+import Users from "../views/Users.vue";
 import store from "../store";
 import NotFound from "../views/404.vue";
 
@@ -28,6 +29,12 @@ let router = new VueRouter({
       path: "/edit",
       name: "Edit",
       component: Edit,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/users",
+      name: "Users",
+      component: Users,
       meta: { requiresAuth: true },
     },
     {
@@ -56,7 +63,7 @@ router.beforeEach((to, from, next) => {
     } else if (
       store.getters.loggedIn &&
       store.getters.dataToken.role == "customer" &&
-      to.matched.some((record) => record.name == "Edit")
+      to.matched.some((record) => record.name == "Edit" || "Users")
     ) {
       next(router.replace(from));
     } else {

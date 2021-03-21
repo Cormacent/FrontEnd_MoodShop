@@ -17,6 +17,18 @@ services:
           memory: 50M
     volumes:
       - ./shared-api:/shared-files
+    depends_on: 
+      - postgres
+  postgres:
+    image: postgres:9.6.21-alpine
+    ports: 
+      - "5151:5432"
+    env_file: 
+      - ./postgres/.env
+    volumes: 
+      - ./pgdata:/var/lib/postgresql/data
+    networks: 
+      - moodshopnet
   redis:
     image: redis:5.0.10-alpine
     env_file: 

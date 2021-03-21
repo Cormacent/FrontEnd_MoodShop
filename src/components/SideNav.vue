@@ -14,6 +14,13 @@
         size="2x"
       />
     </router-link>
+    <router-link to="/users" :class="roleAdmin ? 'router button' : 'hide'">
+      <fa-icon
+        class="icon text-dark"
+        :icon="['fas', 'user']"
+        size="2x"
+      />
+    </router-link>
   </b-collapse>
 </template>
 

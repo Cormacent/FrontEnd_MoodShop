@@ -498,7 +498,7 @@ export default {
 
     changeDataCategory() {
       this.$store
-        .dispatch("updateCategory", this.id)
+        .dispatch("updateCategory", this.formCategory)
         .then((res) => {
           alert(res.statusText);
           this.getCategory();
