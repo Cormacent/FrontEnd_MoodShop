@@ -65,7 +65,8 @@ router.beforeEach((to, from, next) => {
       store.getters.dataToken.role == "customer" &&
       to.matched.some((record) => record.name == "Edit" || "Users")
     ) {
-      next(router.replace(from));
+      // next(router.replace(from));
+      next();
     } else {
       next();
     }
