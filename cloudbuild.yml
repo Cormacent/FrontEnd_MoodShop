@@ -2,11 +2,11 @@ steps:
 
   #build docker container
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/frontendmoodshop', '.']
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/FrontEnd_MoodShop', '.']
 
   #push container to container registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'gcr.io/$PROJECT_ID/frontendmoodshop']
+    args: [ 'push', 'gcr.io/$PROJECT_ID/FrontEnd_MoodShop/']
 
   #deploy to cloud run
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -22,4 +22,4 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
 images:
-  - 'gcr.io/$PROJECT_ID/frontendmoodshop'
+  - 'gcr.io/$PROJECT_ID/FrontEnd_MoodShop'
