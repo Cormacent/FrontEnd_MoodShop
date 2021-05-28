@@ -1,16 +1,16 @@
 steps:
   #build docker container
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/$COMMIT_SHA', '.']
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/moofshop-fe/$COMMIT_SHA', '.']
 #- name: 'docker/compose:1.19.0'
 #  args: [ 'up', '-d' ]
 #
 #- name: 'gcr.io/cloud-builders/docker'
-#  args: [ 'tag', 'gcr.io/$PROJECT_ID/$REPO_NAME/$COMMIT_SHA', '.' ]
+#  args: [ 'tag', 'gcr.io/$PROJECT_ID/moofshop-fe/$COMMIT_SHA', '.' ]
 
     #push container to container registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'push', 'gcr.io/$PROJECT_ID/$REPO_NAME/$COMMIT_SHA' ]
+  args: [ 'push', 'gcr.io/$PROJECT_ID/moofshop-fe/$COMMIT_SHA' ]
 
   #deploy to cloud run
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -19,11 +19,11 @@ steps:
   - 'deploy'
   - 'moodshop-fe-service'
   - '--image'
-  - 'gcr.io/$PROJECT_ID/$REPO_NAME/$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/moofshop-fe/$COMMIT_SHA'
   - '--region'
   - 'us-central1'
   - '--platform'
   - 'managed'
   - '--allow-unauthenticated'
 images:
-  - 'gcr.io/$PROJECT_ID/$REPO_NAME/$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/moofshop-fe/$COMMIT_SHA'
