@@ -42,20 +42,24 @@ services:
   #    restart: always
   #    mem_limit: 50M
   #    cpus: "0.50"
-  frontend:
-    image: zakimaulana/frontendmoodshop:master
-    restart: unless-stopped
+  frontendmoodshop:
+    build:
+      context: .
+    container_name: "frontendmoodshop"
     ports:
-      - "8080:8080"
-    networks:
-      - moodshopnet
+      - "80:80"
+    volumes:
+      - ./src:/src
+      - /src/node_modules
+#    networks:
+#      - moodshopnet
 #    depends_on:
 #      - api
 #networks:
 #  moodshopnet:
 #    driver: bridge
 
-networks:
-  moodshopnet:
-    external: true
+#networks:
+#  moodshopnet:
+#    external: true
 
