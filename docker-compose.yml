@@ -45,8 +45,8 @@ services:
   frontendmoodshop:
     build:
       context: .
-    image: gcr.io/moodshop-315102/moodshop/moodshop-fe
-    container_name: "frontendmoodshop"
+    image: gcr.io/moodshop-315102/moodshop/frontend
+#    container_name: "frontendmoodshop"
     ports:
       - "8080:8080"
     volumes:
