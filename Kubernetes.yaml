@@ -18,12 +18,12 @@ spec:
     spec:
       containers:
         - name: "frontend"
-          image: "gcr.io/moodshop-315102/moodshop/frontend@sha256:fd14be6c9777ddd5909d2f717fd36302b28f73d816eff8fcedac539f3cb6b894"
+          image: "gcr.io/moodshop-315102/github.com/cormacent/frontend_moodshop:$SHORT_SHA"
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
 metadata:
-  name: "moodshop-hpa-7bdh"
+  name: "moodshop-hpa-p0wq"
   namespace: "default"
   labels:
     app: "moodshop"
