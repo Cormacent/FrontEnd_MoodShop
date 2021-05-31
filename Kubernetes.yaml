@@ -1,0 +1,41 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "moodshop"
+  namespace: "default"
+  labels:
+    app: "moodshop"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "moodshop"
+  template:
+    metadata:
+      labels:
+        app: "moodshop"
+    spec:
+      containers:
+        - name: "frontend"
+          image: "gcr.io/moodshop-315102/moodshop/frontend@sha256:fd14be6c9777ddd5909d2f717fd36302b28f73d816eff8fcedac539f3cb6b894"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "moodshop-hpa-7bdh"
+  namespace: "default"
+  labels:
+    app: "moodshop"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "moodshop"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: "Resource"
+      resource:
+        name: "cpu"
+        targetAverageUtilization: 80
